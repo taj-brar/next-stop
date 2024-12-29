@@ -12,8 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import org.osmdroid.views.CustomZoomButtonsController
 
-private const val WPG_LAT = 49.8954
-private const val WPG_LON = -97.1385
+const val WPG_LAT = 49.8954
+const val WPG_LON = -97.1385
 private const val DEFAULT_ZOOM = 18.0
 private const val LOCATION_PERMISSION_REQUEST_CODE = 1
 

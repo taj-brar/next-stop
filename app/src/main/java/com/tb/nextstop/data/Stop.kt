@@ -1,5 +1,5 @@
 package com.tb.nextstop.data
 
-data class StopUI (
+data class Stop (
     val stopId: Int = 0
 )

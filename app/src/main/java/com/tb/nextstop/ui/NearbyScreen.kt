@@ -2,7 +2,6 @@ package com.tb.nextstop.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,13 +20,16 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
 import com.tb.nextstop.ui.theme.NextStopTheme
 
 
 @Composable
-fun NearbyScreen() {
+fun NearbyScreen(
+    nearbyScreenViewModel: NearbyScreenViewModel = viewModel()
+) {
+    var stops = nearbyScreenViewModel.stopsUIState
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
