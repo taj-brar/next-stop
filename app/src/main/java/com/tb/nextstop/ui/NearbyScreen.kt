@@ -192,16 +192,11 @@ fun FeatureIcon(
 @Composable
 fun StopPreview() {
     NextStopTheme {
-        StopCard(dummyStopAndFeatures)
+        StopCard(Pair(Stop(), listOf(StopFeature())))
     }
 }
 
-val dummyStopAndFeatures = Pair(
-    Stop(0, "", 0),
-    listOf(StopFeature("", 0))
-)
-
 const val HEATED_SHELTER = "Heated Shelter"
 const val UNHEATED_SHELTER = "Unheated Shelter"
-const val BENCH = "BENCH"
+const val BENCH = "Bench"
 const val E_SIGN = "BUSwatch Electronic Sign"

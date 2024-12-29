@@ -19,7 +19,10 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface StopsUIState {
-    data class Success(val stopsAndFeatures: List<Pair<Stop, List<StopFeature>>>): StopsUIState
+    data class Success(
+        val stops: List<Stop>,
+        val stopsAndFeatures: List<Pair<Stop, List<StopFeature>>>
+    ): StopsUIState
     object Error: StopsUIState
     object Loading: StopsUIState
 }
@@ -36,9 +39,11 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
         viewModelScope.launch {
             stopsUIState = StopsUIState.Loading
             stopsUIState = try {
-                val stopsAndFeatures = getNearbyStopsAndFeatures()
+                val stopsResponse = wptRepository.getNearbyStops()
+                val stops = stopsResponse.stops
+                val stopsAndFeatures = getNearbyStopsAndFeatures(stops)
                 Log.d("VM", stopsAndFeatures.toString())
-                StopsUIState.Success(stopsAndFeatures)
+                StopsUIState.Success(stops, stopsAndFeatures)
             } catch(e: HttpException) {
                 Log.d("VM", e.toString())
                 StopsUIState.Error
@@ -49,15 +54,13 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
         }
     }
 
-    private suspend fun getNearbyStopsAndFeatures(): List<Pair<Stop, List<StopFeature>>> {
-        val stopsResponse = wptRepository.getNearbyStops()
-        val stops = stopsResponse.stops
-
+    private suspend fun getNearbyStopsAndFeatures(
+        stops: List<Stop>
+    ): List<Pair<Stop, List<StopFeature>>> {
         return stops.map { stop ->
             stop to wptRepository.getStopFeatures(stop.stopId).stopFeatures
         }
     }
-
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

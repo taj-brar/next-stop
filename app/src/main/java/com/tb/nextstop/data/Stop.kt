@@ -7,9 +7,21 @@ import kotlinx.serialization.Serializable
 data class Stop(
     @SerialName(value = "key")
     val stopId: Int = 0,
-    val name: String,
+    val name: String = "",
     @SerialName(value = "number")
-    val stopNumber: Int,
+    val stopNumber: Int = 0,
+    val centre: Centre = Centre()
+)
+
+@Serializable
+data class Centre(
+    val geographic: GeographicPoint = GeographicPoint()
+)
+
+@Serializable
+data class GeographicPoint(
+    val latitude: String = "0",
+    val longitude: String = "0"
 )
 
 @Serializable
@@ -19,8 +31,8 @@ data class StopsResponse(
 
 @Serializable
 data class StopFeature(
-    val name: String,
-    val count: Int
+    val name: String = "",
+    val count: Int = 0
 )
 
 @Serializable

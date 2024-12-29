@@ -10,7 +10,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.tb.nextstop.data.Stop
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.Marker
 
 const val WPG_LAT = 49.8954
 const val WPG_LON = -97.1385
@@ -28,10 +31,11 @@ private fun checkAndRequestPermissions(context: Context) {
 }
 
 @Composable
-fun OpenStreetMapComposable() {
+fun OpenStreetMapComposable(
+    stops: List<Stop>
+) {
     val localContext = LocalContext.current
 
-    // Ensure permissions are granted
     DisposableEffect(Unit) {
         checkAndRequestPermissions(localContext)
         onDispose { }
@@ -48,7 +52,7 @@ fun OpenStreetMapComposable() {
                 setMultiTouchControls(true)
                 zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
                 controller.setZoom(DEFAULT_ZOOM)
-                controller.setCenter(org.osmdroid.util.GeoPoint(WPG_LAT, WPG_LON))
+                controller.setCenter(GeoPoint(WPG_LAT, WPG_LON))
             }
 
             val locationOverlay = org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay(
@@ -63,10 +67,20 @@ fun OpenStreetMapComposable() {
             mapView
         },
         update = { mapView ->
-            val marker = org.osmdroid.views.overlay.Marker(mapView)
-            marker.position = org.osmdroid.util.GeoPoint(48.8566, 2.3522)
-            marker.title = "Paris"
-            mapView.overlays.add(marker)
+            val markers: List<Marker?> = stops.mapNotNull {
+                val lat = it.centre.geographic.latitude.toDoubleOrNull()
+                val lon = it.centre.geographic.longitude.toDoubleOrNull()
+
+                if (lat != null && lon != null) {
+                    val marker = Marker(mapView)
+                    marker.position = GeoPoint(lat, lon)
+                    marker.title = it.name
+                    marker
+                } else {
+                    null
+                }
+            }
+            mapView.overlays.addAll(markers)
         }
     )
 }
