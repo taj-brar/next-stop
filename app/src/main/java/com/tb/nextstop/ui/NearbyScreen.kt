@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
+import com.tb.nextstop.data.Stop
 import com.tb.nextstop.ui.theme.NextStopTheme
 
 
@@ -29,9 +31,42 @@ import com.tb.nextstop.ui.theme.NextStopTheme
 fun NearbyScreen(
     nearbyScreenViewModel: NearbyScreenViewModel = viewModel()
 ) {
-    var stops = nearbyScreenViewModel.stopsUIState
+    when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
+        is StopsUIState.Success -> StopsList(
+            stopsUIState.stopsResponse.stops,
+            Modifier.fillMaxSize()
+        )
+
+        is StopsUIState.Error -> ErrorScreen()
+        is StopsUIState.Loading -> LoadingScreen()
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "ERROR"
+    )
+}
+
+@Composable
+fun LoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "Loading..."
+    )
+}
+
+@Composable
+fun StopsList(
+    stops: List<Stop>,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .padding(
                 start = dimensionResource(R.dimen.padding_small),
@@ -40,8 +75,8 @@ fun NearbyScreen(
                 bottom = dimensionResource(R.dimen.padding_small),
             )
     ) {
-        items(100) { index ->
-            Stop(index)
+        items(count = stops.size) { index ->
+            StopCard(stops[index])
         }
     }
 }
@@ -55,8 +90,8 @@ fun NearbyScreenPreview() {
 }
 
 @Composable
-fun Stop(
-    stopNum: Int,
+fun StopCard(
+    stop: Stop,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -86,13 +121,11 @@ fun Stop(
                     modifier = modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "NAME",
+                        text = stop.name,
                         overflow = TextOverflow.Ellipsis,
                         minLines = 2,
                         maxLines = 2,
-                        modifier = modifier.fillMaxWidth()
                     )
-                    Text(stopNum.toString())
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,6 +143,11 @@ fun Stop(
 @Composable
 fun StopPreview() {
     NextStopTheme {
-        Stop(0)
+        StopCard(
+            Stop(
+                stopId = 0,
+                name = ""
+            )
+        )
     }
 }

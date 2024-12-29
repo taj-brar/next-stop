@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -59,11 +61,15 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.osmdroid.android.v6114)
     implementation(libs.okhttp)
+    implementation(libs.squareup.logging.interceptor)
+
     // Retrofit
     implementation(libs.retrofit)
-    // Retrofit with Scalar Converter
-    implementation(libs.converter.scalars)
-    implementation(libs.squareup.logging.interceptor)
+    // Retrofit with Kotlin serialization Converter
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
