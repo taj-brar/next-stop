@@ -11,14 +11,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.tb.nextstop.NextStopApplication
-import com.tb.nextstop.data.StopsResponse
+import com.tb.nextstop.data.Stop
+import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.WPTRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface StopsUIState {
-    data class Success(val stopsResponse: StopsResponse): StopsUIState
+    data class Success(val stopsAndFeatures: List<Pair<Stop, List<StopFeature>>>): StopsUIState
     object Error: StopsUIState
     object Loading: StopsUIState
 }
@@ -35,9 +36,9 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
         viewModelScope.launch {
             stopsUIState = StopsUIState.Loading
             stopsUIState = try {
-                val stopsResponse = wptRepository.getNearbyStops()
-                Log.d("VM", stopsResponse.stops.size.toString())
-                StopsUIState.Success(stopsResponse)
+                val stopsAndFeatures = getNearbyStopsAndFeatures()
+                Log.d("VM", stopsAndFeatures.toString())
+                StopsUIState.Success(stopsAndFeatures)
             } catch(e: HttpException) {
                 Log.d("VM", e.toString())
                 StopsUIState.Error
@@ -47,6 +48,16 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
             }
         }
     }
+
+    private suspend fun getNearbyStopsAndFeatures(): List<Pair<Stop, List<StopFeature>>> {
+        val stopsResponse = wptRepository.getNearbyStops()
+        val stops = stopsResponse.stops
+
+        return stops.map { stop ->
+            stop to wptRepository.getStopFeatures(stop.stopId).stopFeatures
+        }
+    }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

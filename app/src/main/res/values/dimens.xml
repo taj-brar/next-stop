@@ -7,4 +7,5 @@
     <dimen name="padding_large">12dp</dimen>
     <dimen name="padding_xlarge">16dp</dimen>
     <dimen name="padding_xxlarge">20dp</dimen>
+    <dimen name="stop_feature_icon_size">20dp</dimen>
 </resources>

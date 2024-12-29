@@ -7,10 +7,24 @@ import kotlinx.serialization.Serializable
 data class Stop(
     @SerialName(value = "key")
     val stopId: Int = 0,
-    val name: String
+    val name: String,
+    @SerialName(value = "number")
+    val stopNumber: Int,
 )
 
 @Serializable
 data class StopsResponse(
     val stops: List<Stop>,
+)
+
+@Serializable
+data class StopFeature(
+    val name: String,
+    val count: Int
+)
+
+@Serializable
+data class StopFeaturesResponse(
+    @SerialName(value = "stop-features")
+    val stopFeatures: List<StopFeature>
 )

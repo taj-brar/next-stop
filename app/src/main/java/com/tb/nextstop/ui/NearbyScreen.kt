@@ -3,6 +3,7 @@ package com.tb.nextstop.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
 import com.tb.nextstop.data.Stop
+import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.ui.theme.NextStopTheme
 
 
@@ -33,7 +35,7 @@ fun NearbyScreen(
 ) {
     when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
         is StopsUIState.Success -> StopsList(
-            stopsUIState.stopsResponse.stops,
+            stopsUIState.stopsAndFeatures,
             Modifier.fillMaxSize()
         )
 
@@ -62,7 +64,7 @@ fun LoadingScreen(
 
 @Composable
 fun StopsList(
-    stops: List<Stop>,
+    stops: List<Pair<Stop, List<StopFeature>>>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -91,9 +93,11 @@ fun NearbyScreenPreview() {
 
 @Composable
 fun StopCard(
-    stop: Stop,
+    stopAndFeatures: Pair<Stop, List<StopFeature>>,
     modifier: Modifier = Modifier
 ) {
+    val stop = stopAndFeatures.first
+    val features = stopAndFeatures.second
     Card(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_small))
     ) {
@@ -131,7 +135,7 @@ fun StopCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier.fillMaxWidth()
                 ) {
-                    Text("FEATURES")
+                    StopFeaturesRow(features)
                     Text("BUSES")
                 }
             }
@@ -139,15 +143,65 @@ fun StopCard(
     }
 }
 
+@Composable
+fun StopFeaturesRow(
+    featuresList: List<StopFeature>,
+    modifier: Modifier = Modifier
+) {
+    val features = featuresList.map { feature ->
+        feature.name
+    }
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (features.contains(HEATED_SHELTER)) {
+            FeatureIcon("H")
+        }
+        if (features.contains(UNHEATED_SHELTER)) {
+            FeatureIcon("U")
+        }
+        if (features.contains(BENCH)) {
+            FeatureIcon("B")
+        }
+        if (features.contains(E_SIGN)) {
+            FeatureIcon("E")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun FeatureIcon(
+    feature: String = "H",
+    modifier: Modifier = Modifier
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .background(color = colorResource(R.color.yellow))
+            .size(dimensionResource(R.dimen.stop_feature_icon_size))
+    ) {
+        Text(
+            text = feature,
+        )
+    }
+}
+
 @Preview
 @Composable
 fun StopPreview() {
     NextStopTheme {
-        StopCard(
-            Stop(
-                stopId = 0,
-                name = ""
-            )
-        )
+        StopCard(dummyStopAndFeatures)
     }
 }
+
+val dummyStopAndFeatures = Pair(
+    Stop(0, "", 0),
+    listOf(StopFeature("", 0))
+)
+
+const val HEATED_SHELTER = "Heated Shelter"
+const val UNHEATED_SHELTER = "Unheated Shelter"
+const val BENCH = "BENCH"
+const val E_SIGN = "BUSwatch Electronic Sign"
