@@ -2,6 +2,7 @@ package com.tb.nextstop.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class Stop(
@@ -39,4 +40,30 @@ data class StopFeature(
 data class StopFeaturesResponse(
     @SerialName(value = "stop-features")
     val stopFeatures: List<StopFeature>
+)
+
+@Serializable
+data class Route(
+    val key: JsonElement,
+    val number: JsonElement,
+    @SerialName(value = "badge-label")
+    val badgeLabel: JsonElement
+)
+
+@Serializable
+data class RouteSchedules(
+    val route: Route
+)
+
+@Serializable
+data class StopSchedule(
+    val stop: Stop,
+    @SerialName(value = "route-schedules")
+    val routeSchedules: List<RouteSchedules>
+)
+
+@Serializable
+data class StopSchedulesResponse(
+    @SerialName(value = "stop-schedule")
+    val stopSchedule: StopSchedule
 )

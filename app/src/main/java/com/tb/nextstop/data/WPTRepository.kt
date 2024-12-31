@@ -5,6 +5,7 @@ import com.tb.nextstop.network.WPTApiService
 interface WPTRepository {
     suspend fun getNearbyStops(): StopsResponse
     suspend fun getStopFeatures(stopId: Int): StopFeaturesResponse
+    suspend fun getStopSchedules(stopId: Int): StopSchedulesResponse
 }
 
 class NetworkWPTRepository(
@@ -14,4 +15,7 @@ class NetworkWPTRepository(
 
     override suspend fun getStopFeatures(stopId: Int): StopFeaturesResponse =
         wptApiService.getStopFeatures(stopId)
+
+    override suspend fun getStopSchedules(stopId: Int): StopSchedulesResponse =
+        wptApiService.getStopSchedules(stopId)
 }

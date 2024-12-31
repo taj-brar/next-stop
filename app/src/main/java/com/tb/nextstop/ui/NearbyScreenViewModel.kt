@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.tb.nextstop.NextStopApplication
+import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.WPTRepository
@@ -21,7 +22,8 @@ import java.io.IOException
 sealed interface StopsUIState {
     data class Success(
         val stops: List<Stop>,
-        val stopsAndFeatures: List<Pair<Stop, List<StopFeature>>>
+        val routesMap: MutableMap<Int, List<Route>>,
+        val featuresMap: MutableMap<Int, List<StopFeature>>,
     ): StopsUIState
     object Error: StopsUIState
     object Loading: StopsUIState
@@ -41,9 +43,10 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
             stopsUIState = try {
                 val stopsResponse = wptRepository.getNearbyStops()
                 val stops = stopsResponse.stops
+                val stopsAndRoutes = getNearbyStopsAndRoutes(stops)
                 val stopsAndFeatures = getNearbyStopsAndFeatures(stops)
                 Log.d("VM", stopsAndFeatures.toString())
-                StopsUIState.Success(stops, stopsAndFeatures)
+                StopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
             } catch(e: HttpException) {
                 Log.d("VM", e.toString())
                 StopsUIState.Error
@@ -54,12 +57,26 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
         }
     }
 
+    private suspend fun getNearbyStopsAndRoutes(
+        stops: List<Stop>
+    ): MutableMap<Int, List<Route>> {
+        val schedulesMap: MutableMap<Int, List<Route>> = mutableMapOf()
+        stops.forEach { stop ->
+            schedulesMap[stop.stopId] = wptRepository.getStopSchedules(stop.stopId).stopSchedule.routeSchedules.map {
+                routeSchedule -> routeSchedule.route
+            }
+        }
+        return schedulesMap
+    }
+
     private suspend fun getNearbyStopsAndFeatures(
         stops: List<Stop>
-    ): List<Pair<Stop, List<StopFeature>>> {
-        return stops.map { stop ->
-            stop to wptRepository.getStopFeatures(stop.stopId).stopFeatures
+    ): MutableMap<Int, List<StopFeature>> {
+        val featuresMap: MutableMap<Int, List<StopFeature>> = mutableMapOf()
+        stops.forEach { stop ->
+            featuresMap[stop.stopId] = wptRepository.getStopFeatures(stop.stopId).stopFeatures
         }
+        return featuresMap
     }
 
     companion object {
