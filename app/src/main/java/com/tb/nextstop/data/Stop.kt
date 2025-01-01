@@ -27,7 +27,7 @@ data class GeographicPoint(
 
 @Serializable
 data class StopsResponse(
-    val stops: List<Stop>,
+    val stops: List<Stop> = listOf(),
 )
 
 @Serializable
@@ -39,7 +39,7 @@ data class StopFeature(
 @Serializable
 data class StopFeaturesResponse(
     @SerialName(value = "stop-features")
-    val stopFeatures: List<StopFeature>
+    val stopFeatures: List<StopFeature> = listOf()
 )
 
 @Serializable
@@ -57,13 +57,13 @@ data class RouteSchedules(
 
 @Serializable
 data class StopSchedule(
-    val stop: Stop,
+    val stop: Stop = Stop(),
     @SerialName(value = "route-schedules")
-    val routeSchedules: List<RouteSchedules>
+    val routeSchedules: List<RouteSchedules> = listOf()
 )
 
 @Serializable
 data class StopSchedulesResponse(
     @SerialName(value = "stop-schedule")
-    val stopSchedule: StopSchedule
+    val stopSchedule: StopSchedule = StopSchedule()
 )

@@ -39,7 +39,7 @@ import kotlinx.serialization.json.intOrNull
 
 @Composable
 fun NearbyScreen(
-    nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.Factory)
+    nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.DetailedStopsFactory)
 ) {
     when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
         is StopsUIState.Success -> StopsList(

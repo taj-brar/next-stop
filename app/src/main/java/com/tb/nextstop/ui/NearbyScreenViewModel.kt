@@ -14,6 +14,9 @@ import com.tb.nextstop.NextStopApplication
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
+import com.tb.nextstop.data.StopFeaturesResponse
+import com.tb.nextstop.data.StopSchedulesResponse
+import com.tb.nextstop.data.StopsResponse
 import com.tb.nextstop.data.WPTRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -24,12 +27,17 @@ sealed interface StopsUIState {
         val stops: List<Stop>,
         val routesMap: MutableMap<Int, List<Route>>,
         val featuresMap: MutableMap<Int, List<StopFeature>>,
-    ): StopsUIState
-    object Error: StopsUIState
-    object Loading: StopsUIState
+    ) : StopsUIState
+
+    object Error : StopsUIState
+    object Loading : StopsUIState
 }
 
-class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel() {
+class NearbyScreenViewModel(
+    private val wptRepository: WPTRepository,
+    private val detailedStops: Boolean
+) :
+    ViewModel() {
     var stopsUIState: StopsUIState by mutableStateOf(StopsUIState.Loading)
         private set
 
@@ -40,33 +48,45 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
     fun getNearbyStops() {
         viewModelScope.launch {
             stopsUIState = StopsUIState.Loading
-            stopsUIState = try {
-                val stopsResponse = wptRepository.getNearbyStops()
-                val stops = stopsResponse.stops
-                val stopsAndRoutes = getNearbyStopsAndRoutes(stops)
-                val stopsAndFeatures = getNearbyStopsAndFeatures(stops)
-                Log.d("VM", stopsAndFeatures.toString())
-                StopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
-            } catch(e: HttpException) {
-                Log.d("VM", e.toString())
+            var stopsResponse = StopsResponse()
+
+            try {
+                stopsResponse = wptRepository.getNearbyStops()
+            } catch (e: HttpException) {
+                Log.d("VM", "Error getting stops\n$e")
                 StopsUIState.Error
-            } catch(e: IOException) {
-                Log.d("VM", e.toString())
+            } catch (e: IOException) {
+                Log.d("VM", "Error getting stops\n$e")
                 StopsUIState.Error
             }
+
+            val stops = stopsResponse.stops
+            val stopsAndRoutes =
+                if (detailedStops) getNearbyStopsAndRoutes(stops) else mutableMapOf()
+            val stopsAndFeatures =
+                if (detailedStops) getNearbyStopsAndFeatures(stops) else mutableMapOf()
+
+            stopsUIState = StopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
         }
     }
 
     private suspend fun getNearbyStopsAndRoutes(
         stops: List<Stop>
     ): MutableMap<Int, List<Route>> {
-        val schedulesMap: MutableMap<Int, List<Route>> = mutableMapOf()
+        val routesMap: MutableMap<Int, List<Route>> = mutableMapOf()
         stops.forEach { stop ->
-            schedulesMap[stop.stopId] = wptRepository.getStopSchedules(stop.stopId).stopSchedule.routeSchedules.map {
-                routeSchedule -> routeSchedule.route
+            var stopSchedulesResponse = StopSchedulesResponse()
+            try {
+                stopSchedulesResponse = wptRepository.getStopSchedules(stop.stopId)
+            } catch (e: HttpException) {
+                Log.d("VM", "Error getting routes for stop ${stop.stopId}\n$e")
             }
+            routesMap[stop.stopId] =
+                stopSchedulesResponse.stopSchedule.routeSchedules.map { routeSchedule ->
+                    routeSchedule.route
+                }
         }
-        return schedulesMap
+        return routesMap
     }
 
     private suspend fun getNearbyStopsAndFeatures(
@@ -74,7 +94,13 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
     ): MutableMap<Int, List<StopFeature>> {
         val featuresMap: MutableMap<Int, List<StopFeature>> = mutableMapOf()
         stops.forEach { stop ->
-            featuresMap[stop.stopId] = wptRepository.getStopFeatures(stop.stopId).stopFeatures
+            var stopFeaturesResponse = StopFeaturesResponse()
+            try {
+                stopFeaturesResponse = wptRepository.getStopFeatures(stop.stopId)
+            } catch (e: HttpException) {
+                Log.d("VM", "Error getting stop features for stop ${stop.stopId}\n$e")
+            }
+            featuresMap[stop.stopId] = stopFeaturesResponse.stopFeatures
         }
         return featuresMap
     }
@@ -84,7 +110,15 @@ class NearbyScreenViewModel(private val wptRepository: WPTRepository): ViewModel
             initializer {
                 val application = (this[APPLICATION_KEY] as NextStopApplication)
                 val wptRepository = application.container.wptRepository
-                NearbyScreenViewModel(wptRepository = wptRepository)
+                NearbyScreenViewModel(wptRepository = wptRepository, detailedStops = false)
+            }
+        }
+
+        val DetailedStopsFactory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as NextStopApplication)
+                val wptRepository = application.container.wptRepository
+                NearbyScreenViewModel(wptRepository = wptRepository, detailedStops = true)
             }
         }
     }
