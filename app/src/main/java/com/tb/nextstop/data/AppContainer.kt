@@ -1,5 +1,6 @@
 package com.tb.nextstop.data
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.tb.nextstop.BuildConfig
 import com.tb.nextstop.network.WPTApiService
@@ -15,7 +16,7 @@ interface AppContainer {
     val wptRepository: WPTRepository
 }
 
-class DefaultAppContainer: AppContainer {
+class DefaultAppContainer(private val context: Context): AppContainer {
     private val baseUrl = "https://api.winnipegtransit.com/v3/"
 
     val apiKeyInterceptor = Interceptor { chain ->
@@ -51,6 +52,9 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val wptRepository: WPTRepository by lazy {
-        NetworkWPTRepository(retrofitService)
+        NetworkWPTRepository(
+            wptApiService = retrofitService,
+            stopDao = StopsDatabase.getDatabase(context).stopDao()
+        )
     }
 }

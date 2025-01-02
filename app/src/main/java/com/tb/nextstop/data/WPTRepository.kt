@@ -9,7 +9,8 @@ interface WPTRepository {
 }
 
 class NetworkWPTRepository(
-    private val wptApiService: WPTApiService
+    private val wptApiService: WPTApiService,
+    private val stopDao: StopDao
 ) : WPTRepository {
     override suspend fun getNearbyStops(): StopsResponse = wptApiService.getNearbyStops()
 
