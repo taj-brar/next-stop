@@ -10,5 +10,5 @@ data class StopEntity(
     val name: String,
     val stopNumber: Int,
     val lat: Double,
-    val lon: Double
+    val lon: Double,
 )

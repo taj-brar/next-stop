@@ -11,17 +11,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface StopDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(stop: StopEntity)
+    suspend fun insertStop(stop: StopEntity)
 
     @Update
-    suspend fun update(stop: StopEntity)
+    suspend fun updateStop(stop: StopEntity)
 
     @Delete
-    suspend fun delete(stop: StopEntity)
+    suspend fun deleteStop(stop: StopEntity)
 
     @Query("SELECT * FROM stops WHERE stopID = :stopId")
     fun getStop(stopId: Int): Flow<StopEntity>
 
     @Query("SELECT * FROM stops ORDER BY stopId ASC")
     fun getAllStops(): Flow<List<StopEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStopFeatures(stopFeatures: StopFeaturesEntity)
 }

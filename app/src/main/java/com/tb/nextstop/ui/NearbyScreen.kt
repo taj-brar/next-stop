@@ -32,6 +32,10 @@ import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.ui.theme.NextStopTheme
+import com.tb.nextstop.utils.BENCH
+import com.tb.nextstop.utils.E_SIGN
+import com.tb.nextstop.utils.HEATED_SHELTER
+import com.tb.nextstop.utils.UNHEATED_SHELTER
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
@@ -332,26 +336,17 @@ val dummyRoutes = listOf(
 val dummyFeatures = listOf(
     StopFeature(
         name = "Heated Shelter",
-        count = 1
     ),
     StopFeature(
         name = "Unheated Shelter",
-        count = 1
     ),
     StopFeature(
         name = "Bench",
-        count = 1
     ),
     StopFeature(
         name = "BUSwatch Electronic Sign",
-        count = 1
     )
 )
-
-const val HEATED_SHELTER = "Heated Shelter"
-const val UNHEATED_SHELTER = "Unheated Shelter"
-const val BENCH = "Bench"
-const val E_SIGN = "BUSwatch Electronic Sign"
 
 private fun tryGetStringValue(jsonElement: JsonElement): String? {
     val primitive = jsonElement as? JsonPrimitive

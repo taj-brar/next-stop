@@ -33,7 +33,6 @@ data class StopsResponse(
 @Serializable
 data class StopFeature(
     val name: String = "",
-    val count: Int = 0
 )
 
 @Serializable

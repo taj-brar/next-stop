@@ -5,7 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [StopEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [StopEntity::class, StopFeaturesEntity::class],
+    version = 3,
+    exportSchema = false)
 abstract class StopsDatabase: RoomDatabase() {
     abstract fun stopDao(): StopDao
 

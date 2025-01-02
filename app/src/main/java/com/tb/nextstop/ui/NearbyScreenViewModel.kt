@@ -15,6 +15,7 @@ import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.StopFeaturesResponse
+import com.tb.nextstop.data.StopSchedule
 import com.tb.nextstop.data.StopSchedulesResponse
 import com.tb.nextstop.data.StopsResponse
 import com.tb.nextstop.data.WPTRepository
@@ -48,10 +49,10 @@ class NearbyScreenViewModel(
     fun getNearbyStops() {
         viewModelScope.launch {
             stopsUIState = StopsUIState.Loading
-            var stopsResponse = StopsResponse()
+            var stops: List<Stop> = listOf()
 
             try {
-                stopsResponse = wptRepository.getNearbyStops()
+                stops = wptRepository.getNearbyStops()
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stops\n$e")
                 StopsUIState.Error
@@ -60,7 +61,6 @@ class NearbyScreenViewModel(
                 StopsUIState.Error
             }
 
-            val stops = stopsResponse.stops
             val stopsAndRoutes =
                 if (detailedStops) getNearbyStopsAndRoutes(stops) else mutableMapOf()
             val stopsAndFeatures =
@@ -75,14 +75,14 @@ class NearbyScreenViewModel(
     ): MutableMap<Int, List<Route>> {
         val routesMap: MutableMap<Int, List<Route>> = mutableMapOf()
         stops.forEach { stop ->
-            var stopSchedulesResponse = StopSchedulesResponse()
+            var stopSchedule: StopSchedule = StopSchedule()
             try {
-                stopSchedulesResponse = wptRepository.getStopSchedules(stop.stopId)
+                stopSchedule = wptRepository.getStopSchedules(stop.stopId)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting routes for stop ${stop.stopId}\n$e")
             }
             routesMap[stop.stopId] =
-                stopSchedulesResponse.stopSchedule.routeSchedules.map { routeSchedule ->
+                stopSchedule.routeSchedules.map { routeSchedule ->
                     routeSchedule.route
                 }
         }
@@ -94,13 +94,13 @@ class NearbyScreenViewModel(
     ): MutableMap<Int, List<StopFeature>> {
         val featuresMap: MutableMap<Int, List<StopFeature>> = mutableMapOf()
         stops.forEach { stop ->
-            var stopFeaturesResponse = StopFeaturesResponse()
+            var stopFeatures: List<StopFeature> = listOf()
             try {
-                stopFeaturesResponse = wptRepository.getStopFeatures(stop.stopId)
+                stopFeatures = wptRepository.getStopFeatures(stop.stopId)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stop features for stop ${stop.stopId}\n$e")
             }
-            featuresMap[stop.stopId] = stopFeaturesResponse.stopFeatures
+            featuresMap[stop.stopId] = stopFeatures
         }
         return featuresMap
     }
