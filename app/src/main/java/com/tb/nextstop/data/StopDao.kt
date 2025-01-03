@@ -27,4 +27,13 @@ interface StopDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStopFeatures(stopFeatures: StopFeaturesEntity)
+
+    @Update
+    fun updateStopFeatures(stopFeatures: StopFeaturesEntity)
+
+    @Delete
+    suspend fun deleteStopFeatures(stopFeatures: StopFeaturesEntity)
+
+    @Query("SELECT * FROM stopFeatures WHERE stopId = :stopId")
+    fun getStopFeatures(stopId: Int) : Flow<StopFeaturesEntity>
 }

@@ -2,7 +2,9 @@ package com.tb.nextstop.data
 
 import com.tb.nextstop.network.WPTApiService
 import com.tb.nextstop.utils.toStopEntity
+import com.tb.nextstop.utils.toStopFeatureList
 import com.tb.nextstop.utils.toStopFeaturesEntity
+import kotlinx.coroutines.flow.firstOrNull
 
 interface WPTRepository {
     suspend fun getNearbyStops(): List<Stop>
@@ -25,13 +27,20 @@ class NetworkWPTRepository(
     }
 
     override suspend fun getStopFeatures(stopId: Int): List<StopFeature> {
-        val stopFeatures = wptApiService.getStopFeatures(stopId).stopFeatures
-        // TODO: check DB before calling API
-        stopDao.insertStopFeatures(stopFeatures.toStopFeaturesEntity(stopId))
+        val localData = stopDao.getStopFeatures(stopId).firstOrNull()
+        val stopFeatures: List<StopFeature>
+
+        if (localData != null) {
+            stopFeatures = localData.toStopFeatureList()
+        } else {
+            stopFeatures = wptApiService.getStopFeatures(stopId).stopFeatures
+            stopDao.insertStopFeatures(stopFeatures.toStopFeaturesEntity(stopId))
+        }
 
         return stopFeatures
     }
 
-    override suspend fun getStopSchedules(stopId: Int): StopSchedule =
-        wptApiService.getStopSchedules(stopId).stopSchedule
+    override suspend fun getStopSchedules(stopId: Int): StopSchedule {
+        return wptApiService.getStopSchedules(stopId).stopSchedule
+    }
 }
