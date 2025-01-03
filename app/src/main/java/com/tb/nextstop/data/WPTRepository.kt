@@ -1,15 +1,18 @@
 package com.tb.nextstop.data
 
 import com.tb.nextstop.network.WPTApiService
+import com.tb.nextstop.utils.createRoute
+import com.tb.nextstop.utils.toRoute
 import com.tb.nextstop.utils.toStopEntity
 import com.tb.nextstop.utils.toStopFeatureList
 import com.tb.nextstop.utils.toStopFeaturesEntity
+import com.tb.nextstop.utils.toStopRouteEntity
 import kotlinx.coroutines.flow.firstOrNull
 
 interface WPTRepository {
     suspend fun getNearbyStops(): List<Stop>
     suspend fun getStopFeatures(stopId: Int): List<StopFeature>
-    suspend fun getStopSchedules(stopId: Int): StopSchedule
+    suspend fun getStopRoutes(stopId: Int): List<Route>
 }
 
 class NetworkWPTRepository(
@@ -40,7 +43,26 @@ class NetworkWPTRepository(
         return stopFeatures
     }
 
-    override suspend fun getStopSchedules(stopId: Int): StopSchedule {
-        return wptApiService.getStopSchedules(stopId).stopSchedule
+    override suspend fun getStopRoutes(stopId: Int): List<Route> {
+        val localStopRoutes = stopDao.getStopRoutes(stopId).firstOrNull()
+        val stopRoutes: List<Route>
+
+        if (!localStopRoutes.isNullOrEmpty()) {
+            stopRoutes = localStopRoutes.map { stopRoute ->
+                stopDao.getRoute(stopRoute.routeKey).firstOrNull()?.toRoute()
+                    ?: createRoute(stopRoute.routeKey)
+            }
+        } else {
+            stopRoutes = wptApiService.getStopSchedules(stopId).stopSchedule.routeSchedules
+                .map { routeSchedule ->
+                    routeSchedule.route
+                }
+            stopRoutes.forEach { route ->
+                val stopRouteEntity = route.toStopRouteEntity(stopId)
+                stopDao.insertStopRoute(stopRouteEntity)
+            }
+        }
+
+        return stopRoutes
     }
 }

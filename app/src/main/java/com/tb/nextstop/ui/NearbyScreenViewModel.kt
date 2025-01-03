@@ -75,16 +75,13 @@ class NearbyScreenViewModel(
     ): MutableMap<Int, List<Route>> {
         val routesMap: MutableMap<Int, List<Route>> = mutableMapOf()
         stops.forEach { stop ->
-            var stopSchedule: StopSchedule = StopSchedule()
+            var stopRoutes = listOf<Route>()
             try {
-                stopSchedule = wptRepository.getStopSchedules(stop.stopId)
+                stopRoutes = wptRepository.getStopRoutes(stop.stopId)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting routes for stop ${stop.stopId}\n$e")
             }
-            routesMap[stop.stopId] =
-                stopSchedule.routeSchedules.map { routeSchedule ->
-                    routeSchedule.route
-                }
+            routesMap[stop.stopId] = stopRoutes
         }
         return routesMap
     }

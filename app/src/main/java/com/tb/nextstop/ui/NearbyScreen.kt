@@ -36,9 +36,9 @@ import com.tb.nextstop.utils.BENCH
 import com.tb.nextstop.utils.E_SIGN
 import com.tb.nextstop.utils.HEATED_SHELTER
 import com.tb.nextstop.utils.UNHEATED_SHELTER
+import com.tb.nextstop.utils.tryGetValueFromJsonElement
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.intOrNull
 
 
 @Composable
@@ -191,7 +191,7 @@ fun BusRouteIcon(
     route: JsonElement = JsonPrimitive("75"),
     modifier: Modifier = Modifier
 ) {
-    val routeLabel = tryGetIntValue(route) ?: tryGetStringValue(route)
+    val routeLabel = tryGetValueFromJsonElement(route)
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -347,12 +347,3 @@ val dummyFeatures = listOf(
         name = "BUSwatch Electronic Sign",
     )
 )
-
-private fun tryGetStringValue(jsonElement: JsonElement): String? {
-    val primitive = jsonElement as? JsonPrimitive
-    return if (primitive?.isString == true) primitive.content else null
-}
-
-private fun tryGetIntValue(jsonElement: JsonElement): Int? {
-    return (jsonElement as? JsonPrimitive)?.intOrNull
-}

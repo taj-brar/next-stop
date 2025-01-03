@@ -6,10 +6,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [StopEntity::class, StopFeaturesEntity::class],
-    version = 3,
-    exportSchema = false)
-abstract class StopsDatabase: RoomDatabase() {
+    entities = [
+        StopEntity::class,
+        StopFeaturesEntity::class,
+        RouteEntity::class,
+        StopRouteEntity::class
+    ],
+    version = 5,
+    exportSchema = false
+)
+abstract class StopsDatabase : RoomDatabase() {
     abstract fun stopDao(): StopDao
 
     companion object {

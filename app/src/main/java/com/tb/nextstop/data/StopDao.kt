@@ -25,6 +25,7 @@ interface StopDao {
     @Query("SELECT * FROM stops ORDER BY stopId ASC")
     fun getAllStops(): Flow<List<StopEntity>>
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStopFeatures(stopFeatures: StopFeaturesEntity)
 
@@ -36,4 +37,30 @@ interface StopDao {
 
     @Query("SELECT * FROM stopFeatures WHERE stopId = :stopId")
     fun getStopFeatures(stopId: Int) : Flow<StopFeaturesEntity>
+
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertRoute(routeEntity: RouteEntity)
+
+    @Update
+    suspend fun updateRoute(stopRouteEntity: RouteEntity)
+
+    @Delete
+    suspend fun deleteRoute(routeEntity: RouteEntity)
+
+    @Query("SELECT * FROM routes WHERE routeKey = :routeKey")
+    fun getRoute(routeKey: String) : Flow<RouteEntity>
+
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertStopRoute(stopRouteEntity: StopRouteEntity)
+
+    @Update
+    suspend fun updateStopRoute(stopRouteEntity: StopRouteEntity)
+
+    @Delete
+    suspend fun deleteStopRoute(stopRouteEntity: StopRouteEntity)
+
+    @Query("SELECT * FROM stopRoutes WHERE stopId = :stopId")
+    fun getStopRoutes(stopId: Int) : Flow<List<StopRouteEntity>>
 }
