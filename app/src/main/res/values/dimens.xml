@@ -9,6 +9,4 @@
     <dimen name="padding_xxlarge">20dp</dimen>
     <dimen name="stop_feature_icon_size">20dp</dimen>
     <dimen name="route_icon_size">30dp</dimen>
-    <dimen name="route_icons_space_by">10dp</dimen>
-    <dimen name="stop_feature_icons_space_by">5dp</dimen>
 </resources>

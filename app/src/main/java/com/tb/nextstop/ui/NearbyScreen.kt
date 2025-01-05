@@ -2,7 +2,6 @@ package com.tb.nextstop.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -127,7 +129,7 @@ fun StopCard(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.padding(
+            modifier = Modifier.padding(
                 vertical = dimensionResource(R.dimen.padding_medium),
                 horizontal = dimensionResource(R.dimen.padding_small),
             )
@@ -135,17 +137,17 @@ fun StopCard(
             Image(
                 painter = painterResource(R.drawable.map),
                 contentDescription = "stop thumbnail",
-                modifier = modifier
+                modifier = Modifier
                     .padding(dimensionResource(R.dimen.padding_medium))
                     .size(dimensionResource(R.dimen.stop_thumbnail_size))
                     .background(color = colorResource(R.color.white))
             )
             Column(
-                modifier = modifier.padding(dimensionResource(R.dimen.padding_small))
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = stop.name,
@@ -155,12 +157,22 @@ fun StopCard(
                     )
                 }
                 Row(
-                    modifier = modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    StopFeaturesRow(features)
-                    StopRoutesRow(routes)
+                    StopFeaturesRow(
+                        features,
+                        modifier = Modifier
+                            .weight(3.5f)
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                    )
+                    StopRoutesGrid(
+                        routes,
+                        modifier = Modifier
+                            .weight(6.5f)
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                    )
                 }
             }
         }
@@ -168,20 +180,28 @@ fun StopCard(
 }
 
 @Composable
-fun StopRoutesRow(
+fun StopRoutesGrid(
     routesList: List<Route>,
     modifier: Modifier = Modifier
 ) {
+    val numColumns = 5
+    val numRows = (routesList.size - 1) / numColumns + 1
+    val gridHeight = dimensionResource(R.dimen.route_icon_size) * numRows
     val routes = routesList.map { route ->
         route.badgeLabel
     }
-    Row(
+    LazyVerticalGrid(
+        columns =  GridCells.Fixed(numColumns),
         modifier = modifier
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.route_icons_space_by)),
+            .fillMaxWidth()
+            .height(gridHeight),
+        horizontalArrangement = Arrangement.End,
+        verticalArrangement = Arrangement.Bottom
     ) {
-        routes.forEach { route ->
-            BusRouteIcon(route)
+        items(routes) { route ->
+            BusRouteIcon(
+                route = route,
+            )
         }
     }
 }
@@ -203,7 +223,7 @@ fun BusRouteIcon(
             text = routeLabel.toString(),
             maxLines = 1,
             color = colorResource(R.color.white),
-            style = TextStyle(fontSize = 15.sp)
+            style = TextStyle(fontSize = 13.sp)
         )
     }
 }
@@ -218,7 +238,7 @@ fun StopFeaturesRow(
     }
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.stop_feature_icons_space_by)),
+        horizontalArrangement = Arrangement.Start
     ) {
         if (features.contains(HEATED_SHELTER)) {
             StopFeatureIcon("H")
