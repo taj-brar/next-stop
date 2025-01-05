@@ -23,7 +23,7 @@ interface WPTApiService {
         @Path("stopId") stopId: Int
     ): StopFeaturesResponse
 
-    @GET("stops/{stopId}/schedule.json?end=08:00:00")
+    @GET("stops/{stopId}/schedule.json")
     suspend fun getStopSchedules(
         @Path("stopId") stopId: Int
     ): StopSchedulesResponse
