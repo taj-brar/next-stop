@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -27,9 +29,10 @@ sealed interface StopScheduleUIState {
 }
 
 class StopScheduleViewModel(
+    savedStateHandle: SavedStateHandle,
     private val wptRepository: WPTRepository,
-) : ViewModel()
-{
+) : ViewModel() {
+    private val stopId: Int = checkNotNull(savedStateHandle[StopScheduleDestination.STOP_ID_ARG])
     var stopScheduleUIState: StopScheduleUIState by mutableStateOf(StopScheduleUIState.Loading)
         private set
 
@@ -38,7 +41,6 @@ class StopScheduleViewModel(
     }
 
     fun getStopSchedule() {
-        val stopId = 10627
         viewModelScope.launch {
             stopScheduleUIState = StopScheduleUIState.Loading
             var stopSchedule = StopSchedule()
@@ -62,8 +64,17 @@ class StopScheduleViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as NextStopApplication)
                 val wptRepository = application.container.wptRepository
-                StopScheduleViewModel(wptRepository = wptRepository)
+                StopScheduleViewModel(
+                    this.createSavedStateHandle(),
+                    wptRepository = wptRepository
+                )
             }
         }
     }
+}
+
+object StopScheduleDestination {
+    const val ROUTE = "stop_schedule"
+    const val STOP_ID_ARG = "stopId"
+    const val ROUTE_WITH_ARGS = "$ROUTE/{$STOP_ID_ARG}"
 }

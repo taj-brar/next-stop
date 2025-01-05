@@ -48,7 +48,7 @@ import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
 fun NearbyScreen(
-    onStopClicked: () -> Unit,
+    onStopClicked: (Int) -> Unit,
     nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.DetailedStopsFactory)
 ) {
     when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
@@ -85,7 +85,7 @@ fun LoadingScreen(
 
 @Composable
 fun StopsList(
-    onStopClicked: () -> Unit,
+    onStopClicked: (Int) -> Unit,
     stops: List<Stop>,
     routesMap: MutableMap<Int, List<Route>>,
     featuresMap: MutableMap<Int, List<StopFeature>>,
@@ -116,7 +116,7 @@ fun StopsList(
 
 @Composable
 fun StopCard(
-    onStopClicked: () -> Unit,
+    onStopClicked: (Int) -> Unit,
     stop: Stop,
     routes: List<Route>,
     features: List<StopFeature>,
@@ -124,7 +124,7 @@ fun StopCard(
 ) {
     Card(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_small)),
-        onClick = onStopClicked
+        onClick = { onStopClicked(stop.stopId) }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -191,7 +191,7 @@ fun StopRoutesGrid(
         route.badgeLabel
     }
     LazyVerticalGrid(
-        columns =  GridCells.Fixed(numColumns),
+        columns = GridCells.Fixed(numColumns),
         modifier = modifier
             .fillMaxWidth()
             .height(gridHeight),

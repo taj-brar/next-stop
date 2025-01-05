@@ -15,9 +15,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tb.nextstop.R
 
 
@@ -25,7 +27,6 @@ enum class NextStopApp {
     Nearby,
     Map,
     Saved,
-    StopSchedule
 }
 
 @Composable
@@ -67,9 +68,7 @@ fun NextStopApp(
             composable(NextStopApp.Nearby.name) {
                 NearbyScreen(
                     onStopClicked = {
-                        val stopSchedule = NextStopApp.StopSchedule.name
-                        navController.navigate(stopSchedule)
-                        selectedScreen = stopSchedule
+                        navController.navigate("${StopScheduleDestination.ROUTE}/$it")
                     }
                 )
             }
@@ -79,7 +78,12 @@ fun NextStopApp(
             composable(NextStopApp.Saved.name) {
                 SavedScreen()
             }
-            composable(NextStopApp.StopSchedule.name) {
+            composable(
+                route = StopScheduleDestination.ROUTE_WITH_ARGS,
+                arguments = listOf(navArgument(StopScheduleDestination.STOP_ID_ARG) {
+                    type = NavType.IntType
+                })
+            ) {
                 StopScheduleScreen()
             }
         }
