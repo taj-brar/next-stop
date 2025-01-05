@@ -13,6 +13,7 @@ interface WPTRepository {
     suspend fun getNearbyStops(): List<Stop>
     suspend fun getStopFeatures(stopId: Int): List<StopFeature>
     suspend fun getStopRoutes(stopId: Int): List<Route>
+    suspend fun getStopSchedule(stopId: Int): String
 }
 
 class NetworkWPTRepository(
@@ -64,5 +65,9 @@ class NetworkWPTRepository(
         }
 
         return stopRoutes
+    }
+
+    override suspend fun getStopSchedule(stopId: Int): String {
+        return wptApiService.getStopSchedules(stopId).stopSchedule.routeSchedules.toString()
     }
 }

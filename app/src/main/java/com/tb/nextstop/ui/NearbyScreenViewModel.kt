@@ -14,10 +14,6 @@ import com.tb.nextstop.NextStopApplication
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
-import com.tb.nextstop.data.StopFeaturesResponse
-import com.tb.nextstop.data.StopSchedule
-import com.tb.nextstop.data.StopSchedulesResponse
-import com.tb.nextstop.data.StopsResponse
 import com.tb.nextstop.data.WPTRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -37,8 +33,8 @@ sealed interface StopsUIState {
 class NearbyScreenViewModel(
     private val wptRepository: WPTRepository,
     private val detailedStops: Boolean
-) :
-    ViewModel() {
+) : ViewModel()
+{
     var stopsUIState: StopsUIState by mutableStateOf(StopsUIState.Loading)
         private set
 
