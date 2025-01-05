@@ -50,8 +50,45 @@ data class Route(
 )
 
 @Serializable
+data class ScheduleTime(
+    val scheduled: String,
+    val estimated: String
+)
+
+@Serializable
+data class Times(
+    val arrival: ScheduleTime? = null,
+    val departure: ScheduleTime? = null
+)
+
+@Serializable
+data class Variant(
+    val key: String,
+    val name: String
+)
+
+@Serializable
+data class Bus(
+    val key: Int,
+    @SerialName(value = "bike-rack")
+    val bikeRack: String,
+    val wifi: String
+)
+
+@Serializable
+data class ScheduledStop(
+    val key: String,
+    val cancelled: String,
+    val times: Times,
+    val variant: Variant,
+    val bus: Bus? = null
+)
+
+@Serializable
 data class RouteSchedules(
-    val route: Route
+    val route: Route,
+    @SerialName(value = "scheduled-stops")
+    val scheduledStops: List<ScheduledStop>
 )
 
 @Serializable

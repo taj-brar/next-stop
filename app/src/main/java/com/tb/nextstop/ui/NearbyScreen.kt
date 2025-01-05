@@ -31,6 +31,9 @@ import com.tb.nextstop.R
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
+import com.tb.nextstop.data.dummyFeatures
+import com.tb.nextstop.data.dummyRoutes
+import com.tb.nextstop.data.dummyStop
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.BENCH
 import com.tb.nextstop.utils.E_SIGN
@@ -218,23 +221,23 @@ fun StopFeaturesRow(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.stop_feature_icons_space_by)),
     ) {
         if (features.contains(HEATED_SHELTER)) {
-            FeatureIcon("H")
+            StopFeatureIcon("H")
         }
         if (features.contains(UNHEATED_SHELTER)) {
-            FeatureIcon("U")
+            StopFeatureIcon("U")
         }
         if (features.contains(BENCH)) {
-            FeatureIcon("B")
+            StopFeatureIcon("B")
         }
         if (features.contains(E_SIGN)) {
-            FeatureIcon("E")
+            StopFeatureIcon("E")
         }
     }
 }
 
 @Preview
 @Composable
-fun FeatureIcon(
+fun StopFeatureIcon(
     feature: String = "H",
     modifier: Modifier = Modifier
 ) {
@@ -257,66 +260,3 @@ fun StopPreview() {
         StopCard({}, dummyStop, dummyRoutes, dummyFeatures)
     }
 }
-
-val dummyStop = Stop(
-    stopId = 19035,
-    name = "Eastbound at Maple Wood and Ester Village"
-)
-
-val dummyRoutes = listOf(
-    Route(
-        key = JsonPrimitive("75"),
-        number = JsonPrimitive("75"),
-        badgeLabel = JsonPrimitive("75")
-    ),
-    Route(
-        key = JsonPrimitive("67"),
-        number = JsonPrimitive("67"),
-        badgeLabel = JsonPrimitive("67")
-    ),
-    Route(
-        key = JsonPrimitive("14"),
-        number = JsonPrimitive("14"),
-        badgeLabel = JsonPrimitive("14")
-    ),
-    Route(
-        key = JsonPrimitive("16"),
-        number = JsonPrimitive("16"),
-        badgeLabel = JsonPrimitive("16")
-    ),
-    Route(
-        key = JsonPrimitive("11"),
-        number = JsonPrimitive("11"),
-        badgeLabel = JsonPrimitive("11")
-    ),
-    Route(
-        key = JsonPrimitive("BLUE"),
-        number = JsonPrimitive("BLUE"),
-        badgeLabel = JsonPrimitive("B")
-    ),
-    Route(
-        key = JsonPrimitive("47"),
-        number = JsonPrimitive("47"),
-        badgeLabel = JsonPrimitive("47")
-    ),
-    Route(
-        key = JsonPrimitive("676"),
-        number = JsonPrimitive("676"),
-        badgeLabel = JsonPrimitive("676")
-    ),
-)
-
-val dummyFeatures = listOf(
-    StopFeature(
-        name = "Heated Shelter",
-    ),
-    StopFeature(
-        name = "Unheated Shelter",
-    ),
-    StopFeature(
-        name = "Bench",
-    ),
-    StopFeature(
-        name = "BUSwatch Electronic Sign",
-    )
-)
