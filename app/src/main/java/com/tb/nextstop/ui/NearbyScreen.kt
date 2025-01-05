@@ -43,14 +43,16 @@ import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
 fun NearbyScreen(
+    onStopClicked: () -> Unit,
     nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.DetailedStopsFactory)
 ) {
     when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
         is StopsUIState.Success -> StopsList(
-            stopsUIState.stops,
-            stopsUIState.routesMap,
-            stopsUIState.featuresMap,
-            Modifier.fillMaxSize()
+            onStopClicked = onStopClicked,
+            stops = stopsUIState.stops,
+            routesMap = stopsUIState.routesMap,
+            featuresMap = stopsUIState.featuresMap,
+            modifier = Modifier.fillMaxSize()
         )
 
         is StopsUIState.Error -> ErrorScreen()
@@ -78,6 +80,7 @@ fun LoadingScreen(
 
 @Composable
 fun StopsList(
+    onStopClicked: () -> Unit,
     stops: List<Stop>,
     routesMap: MutableMap<Int, List<Route>>,
     featuresMap: MutableMap<Int, List<StopFeature>>,
@@ -97,6 +100,7 @@ fun StopsList(
             val stop = stops[index]
 
             StopCard(
+                onStopClicked = onStopClicked,
                 stop = stop,
                 routes = routesMap[stop.stopId] ?: listOf(),
                 features = featuresMap[stop.stopId] ?: listOf(),
@@ -105,23 +109,17 @@ fun StopsList(
     }
 }
 
-//@Preview
-//@Composable
-//fun NearbyScreenPreview() {
-//    NextStopTheme {
-//        NearbyScreen()
-//    }
-//}
-
 @Composable
 fun StopCard(
+    onStopClicked: () -> Unit,
     stop: Stop,
     routes: List<Route>,
     features: List<StopFeature>,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.padding(dimensionResource(R.dimen.padding_small))
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)),
+        onClick = onStopClicked
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -256,7 +254,7 @@ fun FeatureIcon(
 @Composable
 fun StopPreview() {
     NextStopTheme {
-        StopCard(dummyStop, dummyRoutes, dummyFeatures)
+        StopCard({}, dummyStop, dummyRoutes, dummyFeatures)
     }
 }
 
@@ -267,19 +265,19 @@ val dummyStop = Stop(
 
 val dummyRoutes = listOf(
     Route(
-        key = JsonPrimitive("44"),
-        number = JsonPrimitive("44"),
-        badgeLabel = JsonPrimitive("44")
+        key = JsonPrimitive("75"),
+        number = JsonPrimitive("75"),
+        badgeLabel = JsonPrimitive("75")
     ),
     Route(
-        key = JsonPrimitive("45"),
-        number = JsonPrimitive("45"),
-        badgeLabel = JsonPrimitive("45")
+        key = JsonPrimitive("67"),
+        number = JsonPrimitive("67"),
+        badgeLabel = JsonPrimitive("67")
     ),
     Route(
-        key = JsonPrimitive("47"),
-        number = JsonPrimitive("47"),
-        badgeLabel = JsonPrimitive("47")
+        key = JsonPrimitive("14"),
+        number = JsonPrimitive("14"),
+        badgeLabel = JsonPrimitive("14")
     ),
     Route(
         key = JsonPrimitive("16"),
@@ -287,50 +285,25 @@ val dummyRoutes = listOf(
         badgeLabel = JsonPrimitive("16")
     ),
     Route(
-        key = JsonPrimitive("18"),
-        number = JsonPrimitive("18"),
-        badgeLabel = JsonPrimitive("18")
+        key = JsonPrimitive("11"),
+        number = JsonPrimitive("11"),
+        badgeLabel = JsonPrimitive("11")
     ),
-//    Route(
-//        key = JsonPrimitive("75"),
-//        number = JsonPrimitive("75"),
-//        badgeLabel = JsonPrimitive("75")
-//    ),
-//    Route(
-//        key = JsonPrimitive("67"),
-//        number = JsonPrimitive("67"),
-//        badgeLabel = JsonPrimitive("67")
-//    ),
-//    Route(
-//        key = JsonPrimitive("14"),
-//        number = JsonPrimitive("14"),
-//        badgeLabel = JsonPrimitive("14")
-//    ),
-//    Route(
-//        key = JsonPrimitive("16"),
-//        number = JsonPrimitive("16"),
-//        badgeLabel = JsonPrimitive("16")
-//    ),
-//    Route(
-//        key = JsonPrimitive("11"),
-//        number = JsonPrimitive("11"),
-//        badgeLabel = JsonPrimitive("11")
-//    ),
-//    Route(
-//        key = JsonPrimitive("BLUE"),
-//        number = JsonPrimitive("BLUE"),
-//        badgeLabel = JsonPrimitive("B")
-//    ),
-//    Route(
-//        key = JsonPrimitive("47"),
-//        number = JsonPrimitive("47"),
-//        badgeLabel = JsonPrimitive("47")
-//    ),
-//    Route(
-//        key = JsonPrimitive("676"),
-//        number = JsonPrimitive("676"),
-//        badgeLabel = JsonPrimitive("676")
-//    ),
+    Route(
+        key = JsonPrimitive("BLUE"),
+        number = JsonPrimitive("BLUE"),
+        badgeLabel = JsonPrimitive("B")
+    ),
+    Route(
+        key = JsonPrimitive("47"),
+        number = JsonPrimitive("47"),
+        badgeLabel = JsonPrimitive("47")
+    ),
+    Route(
+        key = JsonPrimitive("676"),
+        number = JsonPrimitive("676"),
+        badgeLabel = JsonPrimitive("676")
+    ),
 )
 
 val dummyFeatures = listOf(
