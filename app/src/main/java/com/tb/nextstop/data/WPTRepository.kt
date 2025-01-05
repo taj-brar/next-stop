@@ -1,6 +1,7 @@
 package com.tb.nextstop.data
 
-import com.tb.nextstop.network.WPTApiService
+import com.tb.nextstop.network.WPTApiV2Service
+import com.tb.nextstop.network.WPTApiV3Service
 import com.tb.nextstop.utils.createRoute
 import com.tb.nextstop.utils.toRoute
 import com.tb.nextstop.utils.toStopEntity
@@ -14,14 +15,16 @@ interface WPTRepository {
     suspend fun getStopFeatures(stopId: Int): List<StopFeature>
     suspend fun getStopRoutes(stopId: Int): List<Route>
     suspend fun getStopSchedule(stopId: Int): StopSchedule
+    suspend fun getLiveTrip(tripId: Int): String
 }
 
 class NetworkWPTRepository(
-    private val wptApiService: WPTApiService,
+    private val wptApiV3Service: WPTApiV3Service,
+    private val wptApiV2Service: WPTApiV2Service,
     private val stopDao: StopDao
 ) : WPTRepository {
     override suspend fun getNearbyStops(): List<Stop> {
-        val stops = wptApiService.getNearbyStops().stops
+        val stops = wptApiV3Service.getNearbyStops().stops
 
         stops.forEach { stop ->
             stopDao.insertStop(stop.toStopEntity())
@@ -37,7 +40,7 @@ class NetworkWPTRepository(
         if (localData != null) {
             stopFeatures = localData.toStopFeatureList()
         } else {
-            stopFeatures = wptApiService.getStopFeatures(stopId).stopFeatures
+            stopFeatures = wptApiV3Service.getStopFeatures(stopId).stopFeatures
             stopDao.insertStopFeatures(stopFeatures.toStopFeaturesEntity(stopId))
         }
 
@@ -54,7 +57,7 @@ class NetworkWPTRepository(
                     ?: createRoute(stopRoute.routeKey)
             }
         } else {
-            stopRoutes = wptApiService.getStopSchedules(stopId).stopSchedule.routeSchedules
+            stopRoutes = wptApiV3Service.getStopSchedules(stopId).stopSchedule.routeSchedules
                 .map { routeSchedule ->
                     routeSchedule.route
                 }
@@ -68,7 +71,11 @@ class NetworkWPTRepository(
     }
 
     override suspend fun getStopSchedule(stopId: Int): StopSchedule {
-        val result = wptApiService.getStopSchedules(stopId).stopSchedule
+        val result = wptApiV3Service.getStopSchedules(stopId).stopSchedule
         return result
+    }
+
+    override suspend fun getLiveTrip(tripId: Int): String {
+        return wptApiV2Service.getLiveTrip(tripId).toString()
     }
 }

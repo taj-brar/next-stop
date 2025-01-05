@@ -40,7 +40,7 @@ class StopScheduleViewModel(
         getStopSchedule()
     }
 
-    fun getStopSchedule() {
+    private fun getStopSchedule() {
         viewModelScope.launch {
             stopScheduleUIState = StopScheduleUIState.Loading
             var stopSchedule = StopSchedule()

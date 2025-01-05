@@ -103,3 +103,27 @@ data class StopSchedulesResponse(
     @SerialName(value = "stop-schedule")
     val stopSchedule: StopSchedule = StopSchedule()
 )
+
+@Serializable
+data class LiveTripStopPosition(
+    val lat: Double,
+    val lng: Double
+)
+
+@Serializable
+data class LiveTripScheduledStop(
+    val id: String,
+    val tripId: String,
+    val stopId: String,
+    val scheduledTime: String,
+    val estimatedTime: String,
+    val delayed: Boolean,
+    val cancelled: Boolean,
+    val position: LiveTripStopPosition
+)
+
+@Serializable
+data class LiveTripResponse(
+    val id: String,
+    val scheduledStops: List<LiveTripScheduledStop>
+)

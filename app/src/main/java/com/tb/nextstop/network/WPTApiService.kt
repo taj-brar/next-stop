@@ -1,5 +1,6 @@
 package com.tb.nextstop.network
 
+import com.tb.nextstop.data.LiveTripResponse
 import com.tb.nextstop.data.StopFeaturesResponse
 import com.tb.nextstop.data.StopSchedulesResponse
 import com.tb.nextstop.data.StopsResponse
@@ -9,8 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
-interface WPTApiService {
+interface WPTApiV3Service {
     @GET("stops.json")
     suspend fun getNearbyStops(
         @Query("distance") dist: Int = 500,
@@ -27,4 +27,12 @@ interface WPTApiService {
     suspend fun getStopSchedules(
         @Path("stopId") stopId: Int
     ): StopSchedulesResponse
+}
+
+interface WPTApiV2Service {
+    @GET("trips/schedule")
+    suspend fun getLiveTrip(
+        @Query("trip_id") tripId: Int,
+        @Query("live") live: Boolean = true
+    ): LiveTripResponse
 }
