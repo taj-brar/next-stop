@@ -26,6 +26,7 @@ import com.tb.nextstop.data.dummyBusId
 import com.tb.nextstop.data.dummyLiveRoute
 import com.tb.nextstop.data.dummyLiveScheduledStops
 import com.tb.nextstop.ui.theme.NextStopTheme
+import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
 import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
@@ -152,7 +153,7 @@ fun LiveScheduledStopRow(
             modifier = Modifier.weight(7f)
         )
         Text(
-            text = liveScheduledStop.estimatedTime,
+            text = getHrsMinsFromWPTFormat(liveScheduledStop.estimatedTime),
             modifier = Modifier.weight(2f)
         )
     }
