@@ -43,19 +43,17 @@ class StopScheduleViewModel(
     private fun getStopSchedule() {
         viewModelScope.launch {
             stopScheduleUIState = StopScheduleUIState.Loading
-            var stopSchedule = StopSchedule()
 
             try {
-                stopSchedule = wptRepository.getStopSchedule(stopId)
+                val stopSchedule = wptRepository.getStopSchedule(stopId)
+                stopScheduleUIState = StopScheduleUIState.Success(stopSchedule)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stop schedule for $stopId\n$e")
-                StopScheduleUIState.Error
+                stopScheduleUIState = StopScheduleUIState.Error
             } catch (e: IOException) {
                 Log.d("VM", "Error getting stop schedule for $stopId\n$e")
-                StopScheduleUIState.Error
+                stopScheduleUIState = StopScheduleUIState.Error
             }
-
-            stopScheduleUIState = StopScheduleUIState.Success(stopSchedule)
         }
     }
 

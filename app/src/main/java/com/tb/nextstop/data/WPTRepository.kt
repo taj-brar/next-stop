@@ -15,7 +15,7 @@ interface WPTRepository {
     suspend fun getStopFeatures(stopId: Int): List<StopFeature>
     suspend fun getStopRoutes(stopId: Int): List<Route>
     suspend fun getStopSchedule(stopId: Int): StopSchedule
-    suspend fun getLiveTrip(tripId: Int): String
+    suspend fun getLiveTrip(tripId: Int): LiveTripResponse
 }
 
 class NetworkWPTRepository(
@@ -75,7 +75,7 @@ class NetworkWPTRepository(
         return result
     }
 
-    override suspend fun getLiveTrip(tripId: Int): String {
-        return wptApiV2Service.getLiveTrip(tripId).toString()
+    override suspend fun getLiveTrip(tripId: Int): LiveTripResponse {
+        return wptApiV2Service.getLiveTrip(tripId)
     }
 }

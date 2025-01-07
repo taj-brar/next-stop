@@ -33,8 +33,7 @@ sealed interface StopsUIState {
 class NearbyScreenViewModel(
     private val wptRepository: WPTRepository,
     private val detailedStops: Boolean
-) : ViewModel()
-{
+) : ViewModel() {
     var stopsUIState: StopsUIState by mutableStateOf(StopsUIState.Loading)
         private set
 
@@ -42,27 +41,23 @@ class NearbyScreenViewModel(
         getNearbyStops()
     }
 
-    fun getNearbyStops() {
+    private fun getNearbyStops() {
         viewModelScope.launch {
             stopsUIState = StopsUIState.Loading
-            var stops: List<Stop> = listOf()
-
             try {
-                stops = wptRepository.getNearbyStops()
+                val stops = wptRepository.getNearbyStops()
+                val stopsAndRoutes =
+                    if (detailedStops) getNearbyStopsAndRoutes(stops) else mutableMapOf()
+                val stopsAndFeatures =
+                    if (detailedStops) getNearbyStopsAndFeatures(stops) else mutableMapOf()
+                stopsUIState = StopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stops\n$e")
-                StopsUIState.Error
+                stopsUIState = StopsUIState.Error
             } catch (e: IOException) {
                 Log.d("VM", "Error getting stops\n$e")
-                StopsUIState.Error
+                stopsUIState = StopsUIState.Error
             }
-
-            val stopsAndRoutes =
-                if (detailedStops) getNearbyStopsAndRoutes(stops) else mutableMapOf()
-            val stopsAndFeatures =
-                if (detailedStops) getNearbyStopsAndFeatures(stops) else mutableMapOf()
-
-            stopsUIState = StopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
         }
     }
 

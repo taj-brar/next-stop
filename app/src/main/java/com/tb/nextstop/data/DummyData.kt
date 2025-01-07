@@ -1,5 +1,7 @@
 package com.tb.nextstop.data
 
+import com.tb.nextstop.ui.WPG_LAT
+import com.tb.nextstop.ui.WPG_LON
 import kotlinx.serialization.json.JsonPrimitive
 
 val dummyStop = Stop(
@@ -163,3 +165,92 @@ val dummyRouteScheduledStop = RouteScheduledStop(
     scheduledStop = dummyScheduledStops[0]
 )
 
+val dummyLiveScheduledStops = listOf(
+    LiveTripScheduledStop(
+        id = "test_id_1",
+        tripId = "test_trip_id_1",
+        stopId = "12345",
+        name = "Eastbound Meadowood at Dakota",
+        scheduledTime = "2025-01-01T01:00:00",
+        estimatedTime = "2025-01-01T01:01:00",
+        delayed = true,
+        cancelled = false,
+        position = LiveTripStopPosition(
+            lat = WPG_LAT,
+            lng = WPG_LON
+        )
+    ),
+    LiveTripScheduledStop(
+        id = "test_id_2",
+        tripId = "test_trip_id_2",
+        stopId = "12345",
+        name = "Northbound Dakota at St. Vital Centre",
+        scheduledTime = "2025-01-01T02:00:00",
+        estimatedTime = "2025-01-01T02:01:00",
+        delayed = true,
+        cancelled = false,
+        position = LiveTripStopPosition(
+            lat = WPG_LAT,
+            lng = WPG_LON
+        )
+    ),
+    LiveTripScheduledStop(
+        id = "test_id_3",
+        tripId = "test_trip_id_3",
+        stopId = "12345",
+        name = "Northbound Dakota at Abinojii Mikanah South",
+        scheduledTime = "2025-01-01T03:00:00",
+        estimatedTime = "2025-01-01T01:01:00",
+        delayed = true,
+        cancelled = false,
+        position = LiveTripStopPosition(
+            lat = WPG_LAT,
+            lng = WPG_LON
+        )
+    ),
+    LiveTripScheduledStop(
+        id = "test_id_4",
+        tripId = "test_trip_id_4",
+        stopId = "12345",
+        name = "Northbound Dakota at Abinojii Mikanah",
+        scheduledTime = "2025-01-01T04:00:00",
+        estimatedTime = "2025-01-01T04:01:00",
+        delayed = true,
+        cancelled = false,
+        position = LiveTripStopPosition(
+            lat = WPG_LAT,
+            lng = WPG_LON
+        )
+    ),
+    LiveTripScheduledStop(
+        id = "test_id_5",
+        tripId = "test_trip_id_5",
+        stopId = "12345",
+        name = "Northbound Dakota at Beliveau",
+        scheduledTime = "2025-01-01T05:00:00",
+        estimatedTime = "2025-01-01T05:01:00",
+        delayed = true,
+        cancelled = false,
+        position = LiveTripStopPosition(
+            lat = WPG_LAT,
+            lng = WPG_LON
+        )
+    ),
+)
+
+val dummyBusId = "888"
+
+val dummyLiveRoute = LiveRoute(
+    id = "test_id",
+    name = "Selkirk-Osborne",
+    label = "Selkirk-Osborne",
+    badgeLabel = "16"
+)
+
+val dummyBusFeatures = BusFeatures(
+    easyAccess = true,
+    counter = true,
+    bikeRack = true,
+    wifi = true,
+    wheelchairSecurement = true
+)

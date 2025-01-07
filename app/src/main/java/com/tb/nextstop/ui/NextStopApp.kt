@@ -84,7 +84,19 @@ fun NextStopApp(
                     type = NavType.IntType
                 })
             ) {
-                StopScheduleScreen()
+                StopScheduleScreen(
+                    onScheduledStopClicked = {
+                        navController.navigate("${LiveTripDestination.ROUTE}/$it")
+                    }
+                )
+            }
+            composable(
+                route = LiveTripDestination.ROUTE_WITH_ARGS,
+                arguments = listOf(navArgument(LiveTripDestination.TRIP_ID_ARG) {
+                    type = NavType.IntType
+                })
+            ) {
+                LiveTripScreen()
             }
         }
     }

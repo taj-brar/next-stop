@@ -115,6 +115,7 @@ data class LiveTripScheduledStop(
     val id: String,
     val tripId: String,
     val stopId: String,
+    val name: String,
     val scheduledTime: String,
     val estimatedTime: String,
     val delayed: Boolean,
@@ -123,7 +124,30 @@ data class LiveTripScheduledStop(
 )
 
 @Serializable
+data class LiveRoute(
+    val id: String,
+    val name: String,
+    val label: String,
+    val badgeLabel: String
+)
+
+@Serializable
+data class BusFeatures(
+    @SerialName(value = "easy-access")
+    val easyAccess: Boolean? = null,
+    val counter: Boolean? = null,
+    @SerialName(value = "bike-rack")
+    val bikeRack: Boolean? = null,
+    val wifi: Boolean? = null,
+    @SerialName(value = "wheelchair-securement")
+    val wheelchairSecurement: Boolean? = null,
+)
+
+@Serializable
 data class LiveTripResponse(
     val id: String,
+    val busId: String,
+    val route: LiveRoute,
+    val busFeatures: BusFeatures,
     val scheduledStops: List<LiveTripScheduledStop>
 )

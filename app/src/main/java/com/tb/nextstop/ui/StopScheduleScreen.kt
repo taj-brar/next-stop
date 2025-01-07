@@ -37,11 +37,13 @@ import com.tb.nextstop.ui.theme.NextStopTheme
 
 @Composable
 fun StopScheduleScreen(
+    onScheduledStopClicked: (Int) -> Unit,
     stopScheduleViewModel: StopScheduleViewModel = viewModel(factory = StopScheduleViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
     when (val stopScheduleUIState = stopScheduleViewModel.stopScheduleUIState) {
         is StopScheduleUIState.Success -> StopScheduleSuccessScreen(
+            onScheduledStopClicked = onScheduledStopClicked,
             stopSchedule = stopScheduleUIState.stopSchedule,
             modifier = modifier.fillMaxSize()
         )
@@ -53,6 +55,7 @@ fun StopScheduleScreen(
 
 @Composable
 fun StopScheduleSuccessScreen(
+    onScheduledStopClicked: (Int) -> Unit,
     stopSchedule: StopSchedule,
     modifier: Modifier = Modifier
 ) {
@@ -65,6 +68,7 @@ fun StopScheduleSuccessScreen(
                 .fillMaxWidth()
         )
         ScheduledStopList(
+            onScheduledStopClicked = onScheduledStopClicked,
             stopSchedule = stopSchedule,
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,6 +84,7 @@ fun StopScheduleSuccessScreenPreview(
 ) {
     NextStopTheme {
         StopScheduleSuccessScreen(
+            onScheduledStopClicked = { },
             stopSchedule = dummyStopSchedule
         )
     }
@@ -165,6 +170,7 @@ fun StopScheduleHeaderBusRoutes(
 
 @Composable
 fun ScheduledStopList(
+    onScheduledStopClicked: (Int) -> Unit,
     stopSchedule: StopSchedule,
     modifier: Modifier = Modifier
 ) {
@@ -174,6 +180,7 @@ fun ScheduledStopList(
     ) {
         items(routeScheduledStops) { routeScheduledStop ->
             ScheduledStopCard(
+                onScheduledStopClicked = onScheduledStopClicked,
                 routeScheduledStop = routeScheduledStop
             )
         }
@@ -199,6 +206,7 @@ fun getScheduledStopsFromRouteSchedules(
 
 @Composable
 fun ScheduledStopCard(
+    onScheduledStopClicked: (Int) -> Unit,
     routeScheduledStop: RouteScheduledStop,
     modifier: Modifier = Modifier
 ) {
@@ -209,7 +217,11 @@ fun ScheduledStopCard(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.secondaryContainer)
-            .padding(dimensionResource(R.dimen.padding_small))
+            .padding(dimensionResource(R.dimen.padding_small)),
+        onClick = {
+            val tripId = scheduledStop.key.split("-").firstOrNull()
+            onScheduledStopClicked(tripId?.toInt() ?: -1)
+        }
     ) {
         Row(
             modifier = modifier
@@ -288,6 +300,7 @@ enum class BusFeature {
 fun ScheduledStopCardPreview() {
     NextStopTheme {
         ScheduledStopCard(
+            onScheduledStopClicked = { },
             routeScheduledStop = dummyRouteScheduledStop
         )
     }
