@@ -27,6 +27,7 @@ import com.tb.nextstop.data.dummyLiveRoute
 import com.tb.nextstop.data.dummyLiveScheduledStops
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
+import com.tb.nextstop.utils.isTimeInThePast
 import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
@@ -49,7 +50,6 @@ fun LiveTripScreen(
             liveScheduledStops = liveTripUIState.liveScheduledStops,
             modifier = modifier.fillMaxSize()
         )
-
         is LiveTripUIState.Error -> ErrorScreen()
         is LiveTripUIState.Loading -> LoadingScreen()
     }
@@ -140,6 +140,7 @@ fun LiveScheduledStopRow(
     liveScheduledStop: LiveTripScheduledStop,
     modifier: Modifier = Modifier
 ) {
+    val pastFutureIndicator = if (isTimeInThePast(liveScheduledStop.estimatedTime)) "PAST" else "FUTURE"
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -153,7 +154,7 @@ fun LiveScheduledStopRow(
             modifier = Modifier.weight(7f)
         )
         Text(
-            text = getHrsMinsFromWPTFormat(liveScheduledStop.estimatedTime),
+            text = getHrsMinsFromWPTFormat(liveScheduledStop.estimatedTime) + "\n" + pastFutureIndicator,
             modifier = Modifier.weight(2f)
         )
     }

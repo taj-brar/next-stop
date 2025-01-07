@@ -42,6 +42,7 @@ class LiveTripViewModel(
         private set
 
     init {
+        liveTripUIState = LiveTripUIState.Loading
         viewModelScope.launch {
             getLiveScheduledStops()
         }
@@ -50,8 +51,6 @@ class LiveTripViewModel(
     fun getLiveScheduledStops() {
         Log.d("TEST", "GETTING LIVE DATA")
         viewModelScope.launch {
-            liveTripUIState = LiveTripUIState.Loading
-
             try {
                 val liveTripResponse = wptRepository.getLiveTrip(tripId)
                 liveTripUIState = LiveTripUIState.Success(
