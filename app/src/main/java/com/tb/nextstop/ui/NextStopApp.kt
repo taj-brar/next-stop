@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,19 @@ fun NextStopApp(
     navController: NavHostController = rememberNavController()
 ) {
     var selectedScreen by remember { mutableStateOf(NextStopApp.Nearby.name) }
+
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            selectedScreen = when (destination.route) {
+                NextStopApp.Nearby.name -> NextStopApp.Nearby.name
+                NextStopApp.Map.name -> NextStopApp.Map.name
+                NextStopApp.Saved.name -> NextStopApp.Saved.name
+                LiveTripDestination.ROUTE_WITH_ARGS -> LiveTripDestination.NAME
+                StopScheduleDestination.ROUTE_WITH_ARGS -> StopScheduleDestination.NAME
+                else -> ""
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -70,7 +84,6 @@ fun NextStopApp(
                 NearbyScreen(
                     onStopClicked = {
                         navController.navigate("${StopScheduleDestination.ROUTE}/$it")
-                        selectedScreen = StopScheduleDestination.NAME
                     }
                 )
             }
@@ -89,7 +102,6 @@ fun NextStopApp(
                 StopScheduleScreen(
                     onScheduledStopClicked = {
                         navController.navigate("${LiveTripDestination.ROUTE}/$it")
-                        selectedScreen = LiveTripDestination.NAME
                     }
                 )
             }
