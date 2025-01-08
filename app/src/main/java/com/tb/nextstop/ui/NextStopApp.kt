@@ -1,5 +1,6 @@
 package com.tb.nextstop.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +62,9 @@ fun NextStopApp(
         NavHost(
             navController = navController,
             startDestination = NextStopApp.Nearby.name,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(color = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             composable(NextStopApp.Nearby.name) {
                 NearbyScreen(

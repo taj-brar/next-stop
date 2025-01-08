@@ -19,16 +19,20 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
@@ -125,17 +129,27 @@ fun StopCard(
     features: List<StopFeature>,
     modifier: Modifier = Modifier
 ) {
+    val cardColor = MaterialTheme.colorScheme.background
     Card(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_small)),
-        onClick = { onStopClicked(stop.stopId) }
+        onClick = { onStopClicked(stop.stopId) },
+        colors = CardDefaults.cardColors(
+            containerColor = cardColor,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+            pressedElevation = 1.dp
+        )
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(
-                vertical = dimensionResource(R.dimen.padding_medium),
-                horizontal = dimensionResource(R.dimen.padding_small),
-            )
+            modifier = Modifier
+                .padding(
+                    vertical = dimensionResource(R.dimen.padding_medium),
+                    horizontal = dimensionResource(R.dimen.padding_small),
+                )
+                .background(color = cardColor)
         ) {
             Image(
                 painter = painterResource(R.drawable.map),
@@ -158,6 +172,7 @@ fun StopCard(
                         text = stop.name,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 Row(
@@ -221,13 +236,13 @@ fun BusRouteIcon(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .background(color = colorResource(R.color.black))
+            .background(color = Color.Black)
             .size(dimensionResource(R.dimen.route_icon_size))
     ) {
         Text(
             text = routeLabel.toString(),
             maxLines = 1,
-            color = colorResource(R.color.white),
+            color = Color.White,
             style = TextStyle(fontSize = 13.sp)
         )
     }
