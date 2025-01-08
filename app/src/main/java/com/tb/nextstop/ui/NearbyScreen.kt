@@ -150,30 +150,29 @@ fun StopCard(
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
                 ) {
                     Text(
                         text = stop.name,
                         overflow = TextOverflow.Ellipsis,
-                        minLines = 2,
                         maxLines = 2,
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium)),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    StopFeaturesRow(
+                    StopFeaturesGrid(
                         features,
-                        modifier = Modifier
-                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     StopRoutesGrid(
                         routes,
-                        modifier = Modifier
-                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
             }
@@ -235,78 +234,46 @@ fun BusRouteIcon(
 }
 
 @Composable
-fun StopFeaturesRow(
+fun StopFeaturesGrid(
     featuresList: List<StopFeature>,
     modifier: Modifier = Modifier
 ) {
+    val numFeatures = featuresList.size
+    val maxColumns = 2
+    val numRows = (numFeatures - 1) / maxColumns + 1
+    val numColumns = if (numFeatures > 0) min(maxColumns, numFeatures) else 1
+    val routeIconSize = dimensionResource(R.dimen.stop_feature_icon_size)
+    val gridHeight = routeIconSize * numRows
+    val gridWidth = routeIconSize * numColumns
     val features = featuresList.map { feature ->
         feature.name
     }
-    Column(
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(numRows),
         modifier = modifier
+            .height(gridHeight)
+            .width(gridWidth),
+        horizontalArrangement = Arrangement.End,
+        verticalArrangement = Arrangement.Bottom
     ) {
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (features.contains(HEATED_SHELTER)) {
-                Image(
-                    painter = painterResource(R.drawable.heated_shelter),
-                    contentDescription = "Heated shelter",
-                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
-                )
+        items(features) { feature ->
+            val featureIconId = when (feature) {
+                HEATED_SHELTER -> R.drawable.heated_shelter
+                UNHEATED_SHELTER -> R.drawable.unheated_shelter
+                BENCH -> R.drawable.bench
+                E_SIGN -> R.drawable.clock
+                else -> Int.MIN_VALUE
             }
-            if (features.contains(UNHEATED_SHELTER)) {
+            if (featureIconId != Int.MIN_VALUE) {
                 Image(
-                    painter = painterResource(R.drawable.unheated_shelter),
+                    painter = painterResource(featureIconId),
                     contentDescription = "Heated shelter",
-                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
-                )
-            }
-        }
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (features.contains(BENCH)) {
-                Image(
-                    painter = painterResource(R.drawable.bench),
-                    contentDescription = "Heated shelter",
-                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
-                )
-            }
-            if (features.contains(E_SIGN)) {
-                Image(
-                    painter = painterResource(R.drawable.clock),
-                    contentDescription = "ESign",
                     modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
                 )
             }
         }
     }
 }
-
-@Preview
-@Composable
-fun StopFeatureIcon(
-    feature: String = "H",
-    modifier: Modifier = Modifier
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .background(color = colorResource(R.color.yellow))
-            .size(dimensionResource(R.dimen.stop_feature_icon_size))
-    ) {
-        Text(
-            text = feature,
-        )
-    }
-}
-
-
 
 @Preview
 @Composable
