@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>fire</title>
+  <ellipse style="stroke: rgb(0, 0, 0); fill: none; stroke-width: 5px;" cx="50" cy="50" rx="31.566" ry="31.566"/>
+  <rect x="48" y="35.999" width="4" height="15" style=""/>
+  <rect x="48" y="48.5" width="25" height="3" style=""/>
+</svg>
