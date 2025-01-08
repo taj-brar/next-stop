@@ -6,15 +6,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import com.tb.nextstop.utils.UNHEATED_SHELTER
 import com.tb.nextstop.utils.tryGetValueFromJsonElement
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import kotlin.math.min
 
 
 @Composable
@@ -164,13 +167,12 @@ fun StopCard(
                     StopFeaturesRow(
                         features,
                         modifier = Modifier
-                            .weight(3.5f)
                             .padding(dimensionResource(R.dimen.padding_medium))
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                     StopRoutesGrid(
                         routes,
                         modifier = Modifier
-                            .weight(6.5f)
                             .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
@@ -184,17 +186,21 @@ fun StopRoutesGrid(
     routesList: List<Route>,
     modifier: Modifier = Modifier
 ) {
-    val numColumns = 5
-    val numRows = (routesList.size - 1) / numColumns + 1
-    val gridHeight = dimensionResource(R.dimen.route_icon_size) * numRows
+    val numRoutes = routesList.size
+    val maxColumns = 5
+    val numRows = (numRoutes - 1) / maxColumns + 1
+    val numColumns = if (numRoutes > 0) min(maxColumns, numRoutes) else 1
+    val routeIconSize = dimensionResource(R.dimen.route_icon_size)
+    val gridHeight = routeIconSize * numRows
+    val gridWidth = routeIconSize * numColumns
     val routes = routesList.map { route ->
         route.badgeLabel
     }
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(numColumns),
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(numRows),
         modifier = modifier
-            .fillMaxWidth()
-            .height(gridHeight),
+            .height(gridHeight)
+            .width(gridWidth),
         horizontalArrangement = Arrangement.End,
         verticalArrangement = Arrangement.Bottom
     ) {
@@ -236,21 +242,48 @@ fun StopFeaturesRow(
     val features = featuresList.map { feature ->
         feature.name
     }
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.Start
+    Column(
+        modifier = modifier
     ) {
-        if (features.contains(HEATED_SHELTER)) {
-            StopFeatureIcon("H")
+        Row(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (features.contains(HEATED_SHELTER)) {
+                Image(
+                    painter = painterResource(R.drawable.heated_shelter),
+                    contentDescription = "Heated shelter",
+                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
+                )
+            }
+            if (features.contains(UNHEATED_SHELTER)) {
+                Image(
+                    painter = painterResource(R.drawable.unheated_shelter),
+                    contentDescription = "Heated shelter",
+                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
+                )
+            }
         }
-        if (features.contains(UNHEATED_SHELTER)) {
-            StopFeatureIcon("U")
-        }
-        if (features.contains(BENCH)) {
-            StopFeatureIcon("B")
-        }
-        if (features.contains(E_SIGN)) {
-            StopFeatureIcon("E")
+        Row(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (features.contains(BENCH)) {
+                Image(
+                    painter = painterResource(R.drawable.bench),
+                    contentDescription = "Heated shelter",
+                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
+                )
+            }
+            if (features.contains(E_SIGN)) {
+                Image(
+                    painter = painterResource(R.drawable.clock),
+                    contentDescription = "ESign",
+                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
+                )
+            }
         }
     }
 }
@@ -273,10 +306,17 @@ fun StopFeatureIcon(
     }
 }
 
+
+
 @Preview
 @Composable
 fun StopPreview() {
     NextStopTheme {
-        StopCard({}, dummyStop, dummyRoutes, dummyFeatures)
+        StopCard(
+            {},
+            dummyStop,
+            dummyRoutes,
+            dummyFeatures
+        )
     }
 }

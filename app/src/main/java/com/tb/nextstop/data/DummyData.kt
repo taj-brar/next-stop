@@ -51,6 +51,16 @@ val dummyRoutes = listOf(
         number = JsonPrimitive("676"),
         badgeLabel = JsonPrimitive("676")
     ),
+    Route(
+        key = JsonPrimitive("60"),
+        number = JsonPrimitive("60"),
+        badgeLabel = JsonPrimitive("60")
+    ),
+    Route(
+        key = JsonPrimitive("54"),
+        number = JsonPrimitive("54"),
+        badgeLabel = JsonPrimitive("54")
+    ),
 )
 
 val dummyFeatures = listOf(
