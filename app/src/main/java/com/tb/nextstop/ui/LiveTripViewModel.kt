@@ -85,6 +85,7 @@ class LiveTripViewModel(
 }
 
 object LiveTripDestination {
+    const val NAME = "Live Trip"
     const val ROUTE = "LIVE_TRIP"
     const val TRIP_ID_ARG = "tripId"
     const val ROUTE_WITH_ARGS = "$ROUTE/{$TRIP_ID_ARG}"

@@ -13,14 +13,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.tb.nextstop.R
 
 
 enum class NextStopApp {
@@ -37,7 +35,7 @@ fun NextStopApp(
 
     Scaffold(
         topBar = {
-            NextStopAppBar()
+            NextStopAppBar(titleText = selectedScreen)
         },
         bottomBar = {
             NavigationBar(
@@ -69,6 +67,7 @@ fun NextStopApp(
                 NearbyScreen(
                     onStopClicked = {
                         navController.navigate("${StopScheduleDestination.ROUTE}/$it")
+                        selectedScreen = StopScheduleDestination.NAME
                     }
                 )
             }
@@ -87,6 +86,7 @@ fun NextStopApp(
                 StopScheduleScreen(
                     onScheduledStopClicked = {
                         navController.navigate("${LiveTripDestination.ROUTE}/$it")
+                        selectedScreen = LiveTripDestination.NAME
                     }
                 )
             }
@@ -105,12 +105,13 @@ fun NextStopApp(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NextStopAppBar(
+    titleText: String,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = titleText,
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )

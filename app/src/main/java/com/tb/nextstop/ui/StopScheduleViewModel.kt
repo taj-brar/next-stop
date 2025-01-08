@@ -72,6 +72,7 @@ class StopScheduleViewModel(
 }
 
 object StopScheduleDestination {
+    const val NAME = "Stop Schedule"
     const val ROUTE = "stop_schedule"
     const val STOP_ID_ARG = "stopId"
     const val ROUTE_WITH_ARGS = "$ROUTE/{$STOP_ID_ARG}"
