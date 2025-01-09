@@ -15,15 +15,19 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
 import com.tb.nextstop.data.Bus
@@ -33,10 +37,11 @@ import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopSchedule
 import com.tb.nextstop.data.dummyRouteScheduledStop
 import com.tb.nextstop.data.dummyStopSchedule
-import com.tb.nextstop.ui.nearby.BusRouteIcon
+import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
+import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
 
 @Composable
 fun StopScheduleScreen(
@@ -204,7 +209,11 @@ fun getScheduledStopsFromRouteSchedules(
             )
         }
     }
-    return routeScheduledStops
+    return routeScheduledStops.sortedWith { stop1, stop2 ->
+        val stop1Time = stop1.scheduledStop.times.arrival?.estimated ?: ""
+        val stop2Time = stop2.scheduledStop.times.arrival?.estimated ?: ""
+        stop1Time.compareTo(stop2Time)
+    }
 }
 
 @Composable
@@ -216,38 +225,62 @@ fun ScheduledStopCard(
     val bus = routeScheduledStop.scheduledStop.bus
     val scheduledStop = routeScheduledStop.scheduledStop
     val route = routeScheduledStop.route
-    Card(
+    val arrivalTime = if (scheduledStop.times.arrival?.estimated != null)
+        getHrsMinsFromWPTFormat(scheduledStop.times.arrival.estimated) else ""
+    OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
             .padding(dimensionResource(R.dimen.padding_small)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+            pressedElevation = 1.dp
+        ),
         onClick = {
             val tripId = scheduledStop.key.split("-").firstOrNull()
             onScheduledStopClicked(tripId?.toInt() ?: -1)
         }
     ) {
         Row(
-            modifier = modifier
-                .padding(dimensionResource(R.dimen.padding_medium))
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_large))
         ) {
             Column(
-                modifier = modifier.weight(2f)
+                modifier = Modifier.weight(2f)
             ) {
+                BusRouteIcon(
+                    route = route.number,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
+                )
                 Text(
                     text = scheduledStop.variant.name,
-                    modifier = modifier
-                )
-                BusFeaturesRow(
-                    bus = bus,
-                    modifier = modifier
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
             }
             Column(
-                modifier = modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    text = scheduledStop.times.arrival?.estimated ?: "",
-                    modifier = modifier
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.clock_filled),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.delay_icon_size))
+                            .padding(dimensionResource(R.dimen.padding_small)),
+                        tint = Color.Red
+                    )
+                    Text(
+                        text = arrivalTime,
+                    )
+                }
+                BusFeaturesRow(
+                    bus = bus,
                 )
             }
         }
@@ -260,7 +293,7 @@ fun BusFeaturesRow(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         if (bus?.bikeRack.toBoolean()) {
             BusFeatureIcon(BusFeature.BIKE_RACK)
@@ -283,7 +316,6 @@ fun BusFeatureIcon(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .background(color = MaterialTheme.colorScheme.tertiaryContainer)
             .size(dimensionResource(R.dimen.stop_feature_icon_size))
     ) {
         Image(

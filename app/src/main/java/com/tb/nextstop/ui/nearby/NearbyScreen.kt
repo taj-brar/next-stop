@@ -3,7 +3,6 @@ package com.tb.nextstop.ui.nearby
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,15 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
 import com.tb.nextstop.data.Route
@@ -42,6 +38,7 @@ import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.dummyFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.data.dummyStop
+import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
@@ -49,9 +46,6 @@ import com.tb.nextstop.utils.BENCH
 import com.tb.nextstop.utils.E_SIGN
 import com.tb.nextstop.utils.HEATED_SHELTER
 import com.tb.nextstop.utils.UNHEATED_SHELTER
-import com.tb.nextstop.utils.tryGetValueFromJsonElement
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.min
 
 
@@ -207,28 +201,6 @@ fun StopRoutesGrid(
                 route = route,
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun BusRouteIcon(
-    route: JsonElement = JsonPrimitive("75"),
-    modifier: Modifier = Modifier
-) {
-    val routeLabel = tryGetValueFromJsonElement(route)
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .background(color = Color.Black)
-            .size(dimensionResource(R.dimen.route_icon_size))
-    ) {
-        Text(
-            text = routeLabel.toString(),
-            maxLines = 1,
-            color = Color.White,
-            style = TextStyle(fontSize = 13.sp)
-        )
     }
 }
 

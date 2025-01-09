@@ -10,4 +10,5 @@
     <dimen name="stop_feature_icon_size">30dp</dimen>
     <dimen name="route_icon_size">30dp</dimen>
     <dimen name="screen_alert_icon_size">100dp</dimen>
+    <dimen name="delay_icon_size">25dp</dimen>
 </resources>
