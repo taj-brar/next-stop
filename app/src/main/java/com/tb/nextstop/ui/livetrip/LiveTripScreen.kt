@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.livetrip
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,10 +25,13 @@ import com.tb.nextstop.data.dummyBusFeatures
 import com.tb.nextstop.data.dummyBusId
 import com.tb.nextstop.data.dummyLiveRoute
 import com.tb.nextstop.data.dummyLiveScheduledStops
+import com.tb.nextstop.ui.stopschedule.BusFeature
+import com.tb.nextstop.ui.stopschedule.BusFeatureIcon
+import com.tb.nextstop.ui.nearby.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
-import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
+import com.tb.nextstop.utils.getHrsMinsFromWPTLiveFormat
 import com.tb.nextstop.utils.isTimeInThePast
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -156,7 +159,7 @@ fun LiveScheduledStopRow(
             modifier = Modifier.weight(7f)
         )
         Text(
-            text = getHrsMinsFromWPTFormat(liveScheduledStop.estimatedTime) + "\n" + pastFutureIndicator,
+            text = getHrsMinsFromWPTLiveFormat(liveScheduledStop.estimatedTime) + "\n" + pastFutureIndicator,
             modifier = Modifier.weight(2f)
         )
     }

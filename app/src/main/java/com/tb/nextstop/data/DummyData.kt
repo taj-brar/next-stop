@@ -1,7 +1,7 @@
 package com.tb.nextstop.data
 
-import com.tb.nextstop.ui.WPG_LAT
-import com.tb.nextstop.ui.WPG_LON
+import com.tb.nextstop.ui.map.WPG_LAT
+import com.tb.nextstop.ui.map.WPG_LON
 import kotlinx.serialization.json.JsonPrimitive
 
 val dummyStop = Stop(

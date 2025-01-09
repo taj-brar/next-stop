@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.nearby
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

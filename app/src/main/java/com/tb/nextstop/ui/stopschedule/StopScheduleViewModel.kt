@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.stopschedule
 
 import android.util.Log
 import androidx.compose.runtime.getValue

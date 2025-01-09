@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.map
 
 import android.Manifest
 import android.app.Activity

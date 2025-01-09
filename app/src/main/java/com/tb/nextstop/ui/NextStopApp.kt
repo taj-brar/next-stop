@@ -21,6 +21,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tb.nextstop.ui.livetrip.LiveTripDestination
+import com.tb.nextstop.ui.livetrip.LiveTripScreen
+import com.tb.nextstop.ui.map.MapScreen
+import com.tb.nextstop.ui.nearby.NearbyScreen
+import com.tb.nextstop.ui.saved.SavedScreen
+import com.tb.nextstop.ui.stopschedule.StopScheduleDestination
+import com.tb.nextstop.ui.stopschedule.StopScheduleScreen
 
 
 enum class NextStopApp {

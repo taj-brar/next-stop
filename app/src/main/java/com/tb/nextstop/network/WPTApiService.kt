@@ -4,8 +4,8 @@ import com.tb.nextstop.data.LiveTripResponse
 import com.tb.nextstop.data.StopFeaturesResponse
 import com.tb.nextstop.data.StopSchedulesResponse
 import com.tb.nextstop.data.StopsResponse
-import com.tb.nextstop.ui.WPG_LAT
-import com.tb.nextstop.ui.WPG_LON
+import com.tb.nextstop.ui.map.WPG_LAT
+import com.tb.nextstop.ui.map.WPG_LON
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

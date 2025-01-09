@@ -1,8 +1,10 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tb.nextstop.ui.nearby.NearbyScreenViewModel
+import com.tb.nextstop.ui.nearby.StopsUIState
 import com.tb.nextstop.ui.theme.NextStopTheme
 
 

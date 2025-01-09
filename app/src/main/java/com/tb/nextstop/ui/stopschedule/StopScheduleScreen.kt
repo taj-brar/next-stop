@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.stopschedule
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +33,7 @@ import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopSchedule
 import com.tb.nextstop.data.dummyRouteScheduledStop
 import com.tb.nextstop.data.dummyStopSchedule
+import com.tb.nextstop.ui.nearby.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme

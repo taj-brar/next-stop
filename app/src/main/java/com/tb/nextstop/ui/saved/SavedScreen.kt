@@ -1,4 +1,4 @@
-package com.tb.nextstop.ui
+package com.tb.nextstop.ui.saved
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

@@ -10,9 +10,15 @@ const val HRS_MINS_TIME_FORMAT = "hh:mm a"
 
 fun getCurrentTime(): Date = Date()
 
-fun getHrsMinsFromWPTFormat(time: String): String {
-    val inputFormatter = SimpleDateFormat(WPT_LIVE_TIME_FORMAT, Locale.US)
-    val outputFormatter = SimpleDateFormat(HRS_MINS_TIME_FORMAT, Locale.US)
+fun getHrsMinsFromWPTLiveFormat(time: String): String =
+    convertTimeFormats(time, WPT_LIVE_TIME_FORMAT, HRS_MINS_TIME_FORMAT)
+
+fun getHrsMinsFromWPTFormat(time: String): String =
+    convertTimeFormats(time, WPT_TIME_FORMAT, HRS_MINS_TIME_FORMAT)
+
+fun convertTimeFormats(time: String, inputFormat: String, outputFormat: String): String {
+    val inputFormatter = SimpleDateFormat(inputFormat, Locale.US)
+    val outputFormatter = SimpleDateFormat(outputFormat, Locale.US)
 
     val inputDate = inputFormatter.parse(time)
     return outputFormatter.format(inputDate ?: Date())
