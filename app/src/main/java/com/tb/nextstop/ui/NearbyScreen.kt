@@ -18,9 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -130,7 +130,7 @@ fun StopCard(
     modifier: Modifier = Modifier
 ) {
     val cardColor = MaterialTheme.colorScheme.background
-    Card(
+    OutlinedCard (
         modifier = modifier.padding(dimensionResource(R.dimen.padding_small)),
         onClick = { onStopClicked(stop.stopId) },
         colors = CardDefaults.cardColors(
