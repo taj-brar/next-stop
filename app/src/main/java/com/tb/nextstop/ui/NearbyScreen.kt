@@ -42,6 +42,8 @@ import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.dummyFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.data.dummyStop
+import com.tb.nextstop.ui.shared.ErrorScreen
+import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.BENCH
 import com.tb.nextstop.utils.E_SIGN
@@ -70,24 +72,6 @@ fun NearbyScreen(
         is StopsUIState.Error -> ErrorScreen()
         is StopsUIState.Loading -> LoadingScreen()
     }
-}
-
-@Composable
-fun ErrorScreen(
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = "ERROR"
-    )
-}
-
-@Composable
-fun LoadingScreen(
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = "Loading..."
-    )
 }
 
 @Composable

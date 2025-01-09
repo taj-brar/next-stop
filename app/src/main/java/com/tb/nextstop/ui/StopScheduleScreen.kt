@@ -33,6 +33,8 @@ import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopSchedule
 import com.tb.nextstop.data.dummyRouteScheduledStop
 import com.tb.nextstop.data.dummyStopSchedule
+import com.tb.nextstop.ui.shared.ErrorScreen
+import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
 
 @Composable

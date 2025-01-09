@@ -3,4 +3,6 @@
     <string name="nearby">Nearby</string>
     <string name="map">Map</string>
     <string name="saved">Saved</string>
+    <string name="error">Error</string>
+    <string name="default_error_desc">An error has occurred. Please retry later.</string>
 </resources>
