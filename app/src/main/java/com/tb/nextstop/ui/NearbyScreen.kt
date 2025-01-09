@@ -152,7 +152,7 @@ fun StopCard(
                 .background(color = cardColor)
         ) {
             Image(
-                painter = painterResource(R.drawable.map),
+                painter = painterResource(R.drawable.map_black),
                 contentDescription = "stop thumbnail",
                 modifier = Modifier
                     .padding(dimensionResource(R.dimen.padding_medium))

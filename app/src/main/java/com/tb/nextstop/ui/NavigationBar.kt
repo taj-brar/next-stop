@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -29,6 +29,9 @@ fun NavigationBar(
     selectedScreen: String = NextStopApp.Nearby.name,
     modifier: Modifier = Modifier
 ) {
+    val nearbySelected = selectedScreen == NextStopApp.Nearby.name
+    val mapSelected = selectedScreen == NextStopApp.Map.name
+    val savedSelected = selectedScreen == NextStopApp.Saved.name
     Row(
         modifier = modifier
             .background(color = MaterialTheme.colorScheme.primaryContainer)
@@ -41,21 +44,24 @@ fun NavigationBar(
     ) {
         NavigationButton(
             labelId = R.string.nearby,
-            iconId = R.drawable.nearby,
+            iconId = if (nearbySelected)
+                R.drawable.nearby_purple else R.drawable.nearby_black,
             onClick = onNearbyClicked,
-            selected = selectedScreen == NextStopApp.Nearby.name
+            selected = nearbySelected
         )
         NavigationButton(
             labelId = R.string.map,
-            iconId = R.drawable.map,
+            iconId = if (mapSelected)
+                R.drawable.map_purple else R.drawable.map_black,
             onClick = onMapClicked,
-            selected = selectedScreen == NextStopApp.Map.name
+            selected = mapSelected
         )
         NavigationButton(
             labelId = R.string.saved,
-            iconId = R.drawable.saved,
+            iconId = if (savedSelected)
+                R.drawable.saved_purple else R.drawable.saved_black,
             onClick = onSavedClicked,
-            selected = selectedScreen == NextStopApp.Saved.name
+            selected = savedSelected
         )
     }
 }
@@ -74,14 +80,19 @@ fun NavigationButton(
             Image(
                 painter = painterResource(iconId),
                 contentDescription = stringResource(labelId),
-                modifier = modifier.size(dimensionResource(R.dimen.nav_bar_icon_size))
+                modifier = Modifier.size(dimensionResource(R.dimen.nav_bar_icon_size))
             )
         }
-
-    if (selected) {
-        OutlinedButton(onClick = {}) { icon() }
-    } else {
-        Button(onClick = onClick) { icon() }
+    val buttonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer
+    )
+    val onClickFunc = if (selected) ({}) else onClick
+    Button(
+        onClick = onClickFunc,
+        colors = buttonColors,
+        modifier = modifier
+    ) {
+        icon()
     }
 }
 
