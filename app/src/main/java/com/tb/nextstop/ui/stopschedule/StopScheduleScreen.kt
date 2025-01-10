@@ -41,7 +41,9 @@ import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.theme.NextStopTheme
+import com.tb.nextstop.utils.Timing
 import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
+import com.tb.nextstop.utils.getTimingFromWPTFormat
 
 @Composable
 fun StopScheduleScreen(
@@ -225,8 +227,23 @@ fun ScheduledStopCard(
     val bus = routeScheduledStop.scheduledStop.bus
     val scheduledStop = routeScheduledStop.scheduledStop
     val route = routeScheduledStop.route
-    val arrivalTime = if (scheduledStop.times.arrival?.estimated != null)
-        getHrsMinsFromWPTFormat(scheduledStop.times.arrival.estimated) else ""
+    val expectedArrival: String
+    val clockTint: Color
+
+    if (scheduledStop.times.arrival != null) {
+        val estimatedTime = scheduledStop.times.arrival.estimated
+        val scheduledTime = scheduledStop.times.arrival.scheduled
+        expectedArrival = getHrsMinsFromWPTFormat(estimatedTime)
+        clockTint = when (getTimingFromWPTFormat(estimatedTime, scheduledTime)) {
+            Timing.EARLY -> Color.Red
+            Timing.ON_TIME -> Color.Black
+            Timing.LATE -> Color.Red
+        }
+    } else {
+        expectedArrival = ""
+        clockTint = Color.Black
+    }
+
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -273,10 +290,10 @@ fun ScheduledStopCard(
                         modifier = Modifier
                             .size(dimensionResource(R.dimen.delay_icon_size))
                             .padding(dimensionResource(R.dimen.padding_small)),
-                        tint = Color.Red
+                        tint = clockTint
                     )
                     Text(
-                        text = arrivalTime,
+                        text = expectedArrival,
                     )
                 }
                 BusFeaturesRow(

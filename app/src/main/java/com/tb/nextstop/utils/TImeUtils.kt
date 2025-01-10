@@ -5,6 +5,7 @@ import java.util.Date
 import java.util.Locale
 
 const val WPT_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+const val WPT_TIME_FORMAT_NO_SECS = "yyyy-MM-dd'T'HH:mm"
 const val WPT_LIVE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
 const val HRS_MINS_TIME_FORMAT = "hh:mm a"
 
@@ -29,4 +30,23 @@ fun isTimeInThePast(time: String): Boolean {
     val formatter = SimpleDateFormat(WPT_LIVE_TIME_FORMAT, Locale.US)
     val inputTime = formatter.parse(time)
     return inputTime?.before(currentTime) ?: false
+}
+
+fun getTimingFromWPTFormat(expectedTime: String, scheduledTime: String): Timing {
+    val formatter = SimpleDateFormat(WPT_TIME_FORMAT_NO_SECS, Locale.US)
+    val expected = formatter.parse(expectedTime)
+    val scheduled = formatter.parse(scheduledTime)
+    return if (expected?.before(scheduled) == true) {
+        Timing.EARLY
+    } else if (expected?.after(scheduled) == true) {
+        Timing.LATE
+    } else {
+        Timing.ON_TIME
+    }
+}
+
+enum class Timing {
+    EARLY,
+    ON_TIME,
+    LATE
 }
