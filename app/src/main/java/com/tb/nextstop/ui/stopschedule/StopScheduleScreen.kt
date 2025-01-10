@@ -1,5 +1,6 @@
 package com.tb.nextstop.ui.stopschedule
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,9 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -26,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,11 +35,14 @@ import com.tb.nextstop.data.RouteScheduledStop
 import com.tb.nextstop.data.RouteSchedules
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopSchedule
+import com.tb.nextstop.data.dummyFeatures
 import com.tb.nextstop.data.dummyRouteScheduledStop
 import com.tb.nextstop.data.dummyStopSchedule
 import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
+import com.tb.nextstop.ui.shared.StopFeaturesGrid
+import com.tb.nextstop.ui.shared.StopRoutesGrid
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.Timing
 import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
@@ -105,25 +108,35 @@ fun StopScheduleHeader(
     stopSchedule: StopSchedule,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .padding(dimensionResource(R.dimen.padding_medium))
     ) {
         StopScheduleHeaderDetails(
             stop = stopSchedule.stop,
             modifier = Modifier
-                .weight(2f)
-                .padding(dimensionResource(R.dimen.padding_medium))
         )
-        StopScheduleHeaderBusRoutes(
-            stopSchedule = stopSchedule,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .weight(1f)
-                .padding(dimensionResource(R.dimen.padding_medium))
-                .align(Alignment.Bottom)
-        )
+                .fillMaxWidth()
+        ) {
+            StopFeaturesGrid(
+                featuresList = dummyFeatures,
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_small))
+                    .align(Alignment.CenterVertically)
+            )
+            StopScheduleHeaderBusRoutes(
+                stopSchedule = stopSchedule,
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_small))
+                    .align(Alignment.CenterVertically)
+            )
+        }
     }
 }
 
@@ -142,17 +155,24 @@ fun StopScheduleHeaderDetails(
     stop: Stop,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Row(
         modifier = modifier,
-        verticalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
             text = stop.name,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier
+                .weight(8f)
+                .padding(dimensionResource(R.dimen.padding_small))
         )
         Text(
             text = "#" + stop.stopNumber,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            style = TextStyle(fontStyle = FontStyle.Italic),
+            modifier = Modifier
+                .weight(2f)
+                .padding(dimensionResource(R.dimen.padding_medium))
         )
     }
 }
@@ -165,17 +185,10 @@ fun StopScheduleHeaderBusRoutes(
     val routes = stopSchedule.routeSchedules.map { routeSchedule ->
         routeSchedule.route
     }
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(dimensionResource(R.dimen.route_icon_size)),
-        modifier = modifier,
-        horizontalArrangement = Arrangement.End,
-    ) {
-        items(routes) { route ->
-            BusRouteIcon(
-                route = route.badgeLabel,
-            )
-        }
-    }
+    StopRoutesGrid(
+        routesList = routes,
+        modifier = modifier
+    )
 }
 
 @Composable

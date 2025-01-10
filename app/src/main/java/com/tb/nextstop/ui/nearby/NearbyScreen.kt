@@ -9,14 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -38,15 +33,11 @@ import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.dummyFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.data.dummyStop
-import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
+import com.tb.nextstop.ui.shared.StopFeaturesGrid
+import com.tb.nextstop.ui.shared.StopRoutesGrid
 import com.tb.nextstop.ui.theme.NextStopTheme
-import com.tb.nextstop.utils.BENCH
-import com.tb.nextstop.utils.E_SIGN
-import com.tb.nextstop.utils.HEATED_SHELTER
-import com.tb.nextstop.utils.UNHEATED_SHELTER
-import kotlin.math.min
 
 
 @Composable
@@ -168,79 +159,6 @@ fun StopCard(
                         routes,
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun StopRoutesGrid(
-    routesList: List<Route>,
-    modifier: Modifier = Modifier
-) {
-    val numRoutes = routesList.size
-    val maxColumns = 5
-    val numRows = (numRoutes - 1) / maxColumns + 1
-    val numColumns = if (numRoutes > 0) min(maxColumns, numRoutes) else 1
-    val routeIconSize = dimensionResource(R.dimen.route_icon_size)
-    val gridHeight = routeIconSize * numRows
-    val gridWidth = routeIconSize * numColumns
-    val routes = routesList.map { route ->
-        route.badgeLabel
-    }
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(numRows),
-        modifier = modifier
-            .height(gridHeight)
-            .width(gridWidth),
-        horizontalArrangement = Arrangement.End,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        items(routes) { route ->
-            BusRouteIcon(
-                route = route,
-            )
-        }
-    }
-}
-
-@Composable
-fun StopFeaturesGrid(
-    featuresList: List<StopFeature>,
-    modifier: Modifier = Modifier
-) {
-    val numFeatures = featuresList.size
-    val maxColumns = 2
-    val numRows = (numFeatures - 1) / maxColumns + 1
-    val numColumns = if (numFeatures > 0) min(maxColumns, numFeatures) else 1
-    val routeIconSize = dimensionResource(R.dimen.stop_feature_icon_size)
-    val gridHeight = routeIconSize * numRows
-    val gridWidth = routeIconSize * numColumns
-    val features = featuresList.map { feature ->
-        feature.name
-    }
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(numRows),
-        modifier = modifier
-            .height(gridHeight)
-            .width(gridWidth),
-        horizontalArrangement = Arrangement.End,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        items(features) { feature ->
-            val featureIconId = when (feature) {
-                HEATED_SHELTER -> R.drawable.heated_shelter
-                UNHEATED_SHELTER -> R.drawable.unheated_shelter
-                BENCH -> R.drawable.bench
-                E_SIGN -> R.drawable.clock
-                else -> Int.MIN_VALUE
-            }
-            if (featureIconId != Int.MIN_VALUE) {
-                Image(
-                    painter = painterResource(featureIconId),
-                    contentDescription = "Heated shelter",
-                    modifier = Modifier.size(dimensionResource(R.dimen.stop_feature_icon_size))
-                )
             }
         }
     }
