@@ -30,7 +30,7 @@ import com.tb.nextstop.R
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
-import com.tb.nextstop.data.dummyFeatures
+import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.data.dummyStop
 import com.tb.nextstop.ui.shared.ErrorScreen
@@ -172,7 +172,7 @@ fun StopPreview() {
             {},
             dummyStop,
             dummyRoutes,
-            dummyFeatures
+            dummyStopFeatures
         )
     }
 }

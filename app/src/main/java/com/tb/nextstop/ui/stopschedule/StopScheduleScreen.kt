@@ -1,6 +1,5 @@
 package com.tb.nextstop.ui.stopschedule
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,8 +33,9 @@ import com.tb.nextstop.data.Bus
 import com.tb.nextstop.data.RouteScheduledStop
 import com.tb.nextstop.data.RouteSchedules
 import com.tb.nextstop.data.Stop
+import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.StopSchedule
-import com.tb.nextstop.data.dummyFeatures
+import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyRouteScheduledStop
 import com.tb.nextstop.data.dummyStopSchedule
 import com.tb.nextstop.ui.shared.BusRouteIcon
@@ -58,6 +58,7 @@ fun StopScheduleScreen(
         is StopScheduleUIState.Success -> StopScheduleSuccessScreen(
             onScheduledStopClicked = onScheduledStopClicked,
             stopSchedule = stopScheduleUIState.stopSchedule,
+            stopFeatures = stopScheduleUIState.stopFeatures,
             modifier = modifier.fillMaxSize()
         )
 
@@ -70,6 +71,7 @@ fun StopScheduleScreen(
 fun StopScheduleSuccessScreen(
     onScheduledStopClicked: (Int) -> Unit,
     stopSchedule: StopSchedule,
+    stopFeatures: List<StopFeature>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -77,6 +79,7 @@ fun StopScheduleSuccessScreen(
     ) {
         StopScheduleHeader(
             stopSchedule = stopSchedule,
+            stopFeatures = stopFeatures,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -98,7 +101,8 @@ fun StopScheduleSuccessScreenPreview(
     NextStopTheme {
         StopScheduleSuccessScreen(
             onScheduledStopClicked = { },
-            stopSchedule = dummyStopSchedule
+            stopSchedule = dummyStopSchedule,
+            stopFeatures = dummyStopFeatures
         )
     }
 }
@@ -106,6 +110,7 @@ fun StopScheduleSuccessScreenPreview(
 @Composable
 fun StopScheduleHeader(
     stopSchedule: StopSchedule,
+    stopFeatures: List<StopFeature>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -125,7 +130,7 @@ fun StopScheduleHeader(
                 .fillMaxWidth()
         ) {
             StopFeaturesGrid(
-                featuresList = dummyFeatures,
+                featuresList = stopFeatures,
                 modifier = Modifier
                     .padding(dimensionResource(R.dimen.padding_small))
                     .align(Alignment.CenterVertically)
@@ -145,7 +150,8 @@ fun StopScheduleHeader(
 fun StopScheduleHeaderPreview() {
     NextStopTheme {
         StopScheduleHeader(
-            stopSchedule = dummyStopSchedule
+            stopSchedule = dummyStopSchedule,
+            stopFeatures = dummyStopFeatures
         )
     }
 }

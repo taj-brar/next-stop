@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.tb.nextstop.R
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.StopFeature
-import com.tb.nextstop.data.dummyFeatures
+import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.BENCH
@@ -155,6 +155,6 @@ fun StopFeaturesGrid(
 @Composable
 fun StopFeaturesGridPreview() {
     NextStopTheme {
-        StopFeaturesGrid(dummyFeatures)
+        StopFeaturesGrid(dummyStopFeatures)
     }
 }

@@ -63,7 +63,7 @@ val dummyRoutes = listOf(
     ),
 )
 
-val dummyFeatures = listOf(
+val dummyStopFeatures = listOf(
     StopFeature(
         name = "Heated Shelter",
     ),

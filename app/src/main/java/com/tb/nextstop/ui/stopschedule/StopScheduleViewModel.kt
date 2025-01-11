@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.tb.nextstop.NextStopApplication
+import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.StopSchedule
 import com.tb.nextstop.data.WPTRepository
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import java.io.IOException
 sealed interface StopScheduleUIState {
     data class Success(
         val stopSchedule: StopSchedule,
+        val stopFeatures: List<StopFeature>
     ) : StopScheduleUIState
 
     data object Error : StopScheduleUIState
@@ -46,7 +48,11 @@ class StopScheduleViewModel(
 
             try {
                 val stopSchedule = wptRepository.getStopSchedule(stopId)
-                stopScheduleUIState = StopScheduleUIState.Success(stopSchedule)
+                val stopFeatures = wptRepository.getStopFeatures(stopId)
+                stopScheduleUIState = StopScheduleUIState.Success(
+                    stopSchedule = stopSchedule,
+                    stopFeatures = stopFeatures
+                )
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stop schedule for $stopId\n$e")
                 stopScheduleUIState = StopScheduleUIState.Error
