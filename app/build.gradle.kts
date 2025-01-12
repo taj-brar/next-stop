@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     //Room
     implementation(libs.androidx.room.runtime)
+    implementation(libs.play.services.location)
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.ktx)
 

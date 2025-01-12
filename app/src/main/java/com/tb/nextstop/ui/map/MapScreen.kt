@@ -1,30 +1,17 @@
 package com.tb.nextstop.ui.map
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tb.nextstop.ui.nearby.NearbyScreenViewModel
-import com.tb.nextstop.ui.nearby.StopsUIState
-import com.tb.nextstop.ui.theme.NextStopTheme
-
 
 @Composable
 fun MapScreen(
-    nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.Factory)
+    mapScreenViewModel: MapScreenViewModel = viewModel(factory = MapScreenViewModel.Factory)
 ) {
-    val stops = when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
-        is StopsUIState.Success -> stopsUIState.stops
+    val stops = when (val mapScreenUIState = mapScreenViewModel.mapScreenUIState) {
+        is MapScreenUIState.Success -> mapScreenUIState.stops
         else -> listOf()
     }
     OpenStreetMapComposable(
         stops = stops
     )
-}
-
-@Preview
-@Composable
-fun MapScreenPreview() {
-    NextStopTheme {
-        MapScreen()
-    }
 }

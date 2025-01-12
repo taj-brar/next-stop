@@ -11,7 +11,7 @@ import com.tb.nextstop.utils.toStopRouteEntity
 import kotlinx.coroutines.flow.firstOrNull
 
 interface WPTRepository {
-    suspend fun getNearbyStops(): List<Stop>
+    suspend fun getNearbyStops(lat: Double, lon: Double): List<Stop>
     suspend fun getStopFeatures(stopId: Int): List<StopFeature>
     suspend fun getStopRoutes(stopId: Int): List<Route>
     suspend fun getStopSchedule(stopId: Int): StopSchedule
@@ -23,8 +23,11 @@ class NetworkWPTRepository(
     private val wptApiV2Service: WPTApiV2Service,
     private val stopDao: StopDao
 ) : WPTRepository {
-    override suspend fun getNearbyStops(): List<Stop> {
-        val stops = wptApiV3Service.getNearbyStops().stops
+    override suspend fun getNearbyStops(lat: Double, lon: Double): List<Stop> {
+        val stops = wptApiV3Service.getNearbyStops(
+            latitude = lat,
+            longitude = lon
+        ).stops
 
         stops.forEach { stop ->
             stopDao.insertStop(stop.toStopEntity())

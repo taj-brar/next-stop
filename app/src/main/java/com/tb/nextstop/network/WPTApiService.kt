@@ -4,8 +4,6 @@ import com.tb.nextstop.data.LiveTripResponse
 import com.tb.nextstop.data.StopFeaturesResponse
 import com.tb.nextstop.data.StopSchedulesResponse
 import com.tb.nextstop.data.StopsResponse
-import com.tb.nextstop.ui.map.WPG_LAT
-import com.tb.nextstop.ui.map.WPG_LON
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,9 +11,9 @@ import retrofit2.http.Query
 interface WPTApiV3Service {
     @GET("stops.json")
     suspend fun getNearbyStops(
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
         @Query("distance") dist: Int = 500,
-        @Query("lat") latitude: Double = WPG_LAT,
-        @Query("lon") longitude: Double = WPG_LON
     ): StopsResponse
 
     @GET("stops/{stopId}/features.json")

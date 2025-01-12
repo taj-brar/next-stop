@@ -43,7 +43,7 @@ import com.tb.nextstop.ui.theme.NextStopTheme
 @Composable
 fun NearbyScreen(
     onStopClicked: (Int) -> Unit,
-    nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.DetailedStopsFactory)
+    nearbyScreenViewModel: NearbyScreenViewModel = viewModel(factory = NearbyScreenViewModel.Factory)
 ) {
     when (val stopsUIState = nearbyScreenViewModel.stopsUIState) {
         is StopsUIState.Success -> StopsList(

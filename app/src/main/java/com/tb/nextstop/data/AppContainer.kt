@@ -15,6 +15,7 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val wptRepository: WPTRepository
+    val locationRepository: LocationRepository
 }
 
 class DefaultAppContainer(private val context: Context): AppContainer {
@@ -79,5 +80,9 @@ class DefaultAppContainer(private val context: Context): AppContainer {
             wptApiV2Service = apiV2RetrofitService,
             stopDao = StopsDatabase.getDatabase(context).stopDao()
         )
+    }
+
+    override val locationRepository: LocationRepository by lazy {
+        LocalLocationRepository(context)
     }
 }
