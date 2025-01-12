@@ -1,9 +1,7 @@
 package com.tb.nextstop.ui.stopschedule
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,24 +27,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tb.nextstop.R
-import com.tb.nextstop.data.Bus
+import com.tb.nextstop.data.BusFeatures
 import com.tb.nextstop.data.RouteScheduledStop
 import com.tb.nextstop.data.RouteSchedules
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.StopSchedule
-import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyRouteScheduledStop
+import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyStopSchedule
+import com.tb.nextstop.ui.shared.BusFeaturesRow
 import com.tb.nextstop.ui.shared.BusRouteIcon
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.shared.StopFeaturesGrid
 import com.tb.nextstop.ui.shared.StopRoutesGrid
 import com.tb.nextstop.ui.theme.NextStopTheme
-import com.tb.nextstop.utils.Timing
+import com.tb.nextstop.utils.BusTiming
+import com.tb.nextstop.utils.getBusTimingFromWPTFormat
 import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
-import com.tb.nextstop.utils.getTimingFromWPTFormat
 
 @Composable
 fun StopScheduleScreen(
@@ -253,10 +252,10 @@ fun ScheduledStopCard(
         val estimatedTime = scheduledStop.times.arrival.estimated
         val scheduledTime = scheduledStop.times.arrival.scheduled
         expectedArrival = getHrsMinsFromWPTFormat(estimatedTime)
-        clockTint = when (getTimingFromWPTFormat(estimatedTime, scheduledTime)) {
-            Timing.EARLY -> Color.Red
-            Timing.ON_TIME -> Color.Black
-            Timing.LATE -> Color.Red
+        clockTint = when (getBusTimingFromWPTFormat(estimatedTime, scheduledTime)) {
+            BusTiming.EARLY -> Color.Red
+            BusTiming.ON_TIME -> Color.Black
+            BusTiming.LATE -> Color.Red
         }
     } else {
         expectedArrival = ""
@@ -315,49 +314,12 @@ fun ScheduledStopCard(
                         text = expectedArrival,
                     )
                 }
-                BusFeaturesRow(
-                    bus = bus,
-                )
+                BusFeaturesRow(busFeatures = BusFeatures(
+                    bikeRack = bus?.bikeRack == "true",
+                    wifi = bus?.wifi == "true"
+                ))
             }
         }
-    }
-}
-
-@Composable
-fun BusFeaturesRow(
-    bus: Bus?,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-    ) {
-        if (bus?.bikeRack.toBoolean()) {
-            BusFeatureIcon(BusFeature.BIKE_RACK)
-        }
-        if (bus?.wifi.toBoolean()) {
-            BusFeatureIcon(BusFeature.WIFI)
-        }
-    }
-}
-
-@Composable
-fun BusFeatureIcon(
-    busFeature: BusFeature,
-    modifier: Modifier = Modifier
-) {
-    val drawableIcon = when (busFeature) {
-        BusFeature.BIKE_RACK -> R.drawable.bike
-        BusFeature.WIFI -> R.drawable.wifi
-    }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(dimensionResource(R.dimen.stop_feature_icon_size))
-    ) {
-        Image(
-            painter = painterResource(drawableIcon),
-            contentDescription = "Bike rack",
-        )
     }
 }
 

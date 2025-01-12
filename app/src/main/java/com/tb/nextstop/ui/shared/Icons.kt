@@ -1,8 +1,10 @@
 package com.tb.nextstop.ui.shared
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,10 +24,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.tb.nextstop.R
+import com.tb.nextstop.data.BusFeatures
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.StopFeature
-import com.tb.nextstop.data.dummyStopFeatures
+import com.tb.nextstop.data.dummyBusFeatures
 import com.tb.nextstop.data.dummyRoutes
+import com.tb.nextstop.data.dummyStopFeatures
+import com.tb.nextstop.ui.stopschedule.BusFeature
 import com.tb.nextstop.ui.theme.NextStopTheme
 import com.tb.nextstop.utils.BENCH
 import com.tb.nextstop.utils.E_SIGN
@@ -156,5 +161,54 @@ fun StopFeaturesGrid(
 fun StopFeaturesGridPreview() {
     NextStopTheme {
         StopFeaturesGrid(dummyStopFeatures)
+    }
+}
+
+@Composable
+fun BusFeaturesRow(
+    busFeatures: BusFeatures,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.End,
+        modifier = modifier
+    ) {
+        if (busFeatures.bikeRack == true) {
+            BusFeatureIcon(BusFeature.BIKE_RACK)
+        }
+        if (busFeatures.wifi == true) {
+            BusFeatureIcon(BusFeature.WIFI)
+        }
+    }
+}
+
+@Composable
+fun BusFeatureIcon(
+    busFeature: BusFeature,
+    modifier: Modifier = Modifier
+) {
+    val drawableIcon = when (busFeature) {
+        BusFeature.BIKE_RACK -> R.drawable.bike
+        BusFeature.WIFI -> R.drawable.wifi
+    }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(dimensionResource(R.dimen.stop_feature_icon_size))
+    ) {
+        Image(
+            painter = painterResource(drawableIcon),
+            contentDescription = "Bike rack",
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BusFeaturesRowPreview() {
+    NextStopTheme {
+        BusFeaturesRow(
+            busFeatures = dummyBusFeatures
+        )
     }
 }

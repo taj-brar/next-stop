@@ -25,28 +25,40 @@ fun convertTimeFormats(time: String, inputFormat: String, outputFormat: String):
     return outputFormatter.format(inputDate ?: Date())
 }
 
-fun isTimeInThePast(time: String): Boolean {
-    val currentTime = getCurrentTime()
-    val formatter = SimpleDateFormat(WPT_LIVE_TIME_FORMAT, Locale.US)
-    val inputTime = formatter.parse(time)
-    return inputTime?.before(currentTime) ?: false
-}
-
-fun getTimingFromWPTFormat(expectedTime: String, scheduledTime: String): Timing {
+fun getBusTimingFromWPTFormat(expectedTime: String, scheduledTime: String): BusTiming {
     val formatter = SimpleDateFormat(WPT_TIME_FORMAT_NO_SECS, Locale.US)
     val expected = formatter.parse(expectedTime)
     val scheduled = formatter.parse(scheduledTime)
     return if (expected?.before(scheduled) == true) {
-        Timing.EARLY
+        BusTiming.EARLY
     } else if (expected?.after(scheduled) == true) {
-        Timing.LATE
+        BusTiming.LATE
     } else {
-        Timing.ON_TIME
+        BusTiming.ON_TIME
     }
 }
 
-enum class Timing {
+fun getStopTimingFromWPTLiveFormat(expectedTime: String): StopTiming {
+    val formatter = SimpleDateFormat(WPT_LIVE_TIME_FORMAT, Locale.US)
+    val expected = formatter.parse(expectedTime)
+    val current = getCurrentTime()
+    return if (expected?.before(current) == true) {
+        StopTiming.PAST
+    } else if (expected?.after(current) == true) {
+        StopTiming.FUTURE
+    } else {
+        StopTiming.CURRENT
+    }
+}
+
+enum class BusTiming {
     EARLY,
     ON_TIME,
     LATE
+}
+
+enum class StopTiming {
+    PAST,
+    CURRENT,
+    FUTURE
 }

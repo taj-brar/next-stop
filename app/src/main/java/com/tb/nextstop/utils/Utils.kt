@@ -30,3 +30,12 @@ fun createRoute(routeKey: String): Route {
         badgeLabel = JsonPrimitive(routeKey)
     )
 }
+
+fun simplifyStopName(stopName: String): String {
+    return stopName
+        .replace("Northbound", "NB", ignoreCase = true)
+        .replace("Southbound", "SB", ignoreCase = true)
+        .replace("Eastbound", "EB", ignoreCase = true)
+        .replace("Westbound", "WB", ignoreCase = true)
+        .replace(" at ", " @ ", ignoreCase = true)
+}
