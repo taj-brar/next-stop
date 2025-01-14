@@ -3,6 +3,7 @@ package com.tb.nextstop.data
 import com.tb.nextstop.network.WPTApiV2Service
 import com.tb.nextstop.network.WPTApiV3Service
 import com.tb.nextstop.utils.createRoute
+import com.tb.nextstop.utils.isCacheExpired
 import com.tb.nextstop.utils.toRoute
 import com.tb.nextstop.utils.toStopEntity
 import com.tb.nextstop.utils.toStopFeatureList
@@ -38,11 +39,19 @@ class NetworkWPTRepository(
 
     override suspend fun getStopFeatures(stopId: Int): List<StopFeature> {
         val localData = stopDao.getStopFeatures(stopId).firstOrNull()
-        val stopFeatures: List<StopFeature>
+        var stopFeatures = listOf<StopFeature>()
+        var needNetworkCall = true
 
         if (localData != null) {
-            stopFeatures = localData.toStopFeatureList()
-        } else {
+            if (isCacheExpired(localData.expiryTime)) {
+                stopDao.deleteStopFeatures(localData)
+            } else {
+                stopFeatures = localData.toStopFeatureList()
+                needNetworkCall = false
+            }
+        }
+
+        if (needNetworkCall) {
             stopFeatures = wptApiV3Service.getStopFeatures(stopId).stopFeatures
             stopDao.insertStopFeatures(stopFeatures.toStopFeaturesEntity(stopId))
         }
@@ -52,14 +61,26 @@ class NetworkWPTRepository(
 
     override suspend fun getStopRoutes(stopId: Int): List<Route> {
         val localStopRoutes = stopDao.getStopRoutes(stopId).firstOrNull()
-        val stopRoutes: List<Route>
+        var stopRoutes = listOf<Route>()
+        var needNetworkCall = true
 
         if (!localStopRoutes.isNullOrEmpty()) {
-            stopRoutes = localStopRoutes.map { stopRoute ->
-                stopDao.getRoute(stopRoute.routeKey).firstOrNull()?.toRoute()
-                    ?: createRoute(stopRoute.routeKey)
+            if (localStopRoutes.any { localStopRoute ->
+                isCacheExpired(localStopRoute.expiryTime)
+            }) {
+                localStopRoutes.forEach { localStopRoute ->
+                    stopDao.deleteStopRoute(localStopRoute)
+                }
+            } else {
+                stopRoutes = localStopRoutes.map { stopRoute ->
+                    stopDao.getRoute(stopRoute.routeKey).firstOrNull()?.toRoute()
+                        ?: createRoute(stopRoute.routeKey)
+                }
+                needNetworkCall = false
             }
-        } else {
+        }
+
+        if (needNetworkCall) {
             stopRoutes = wptApiV3Service.getStopSchedules(stopId).stopSchedule.routeSchedules
                 .map { routeSchedule ->
                     routeSchedule.route

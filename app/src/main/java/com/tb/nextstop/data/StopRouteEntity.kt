@@ -8,5 +8,6 @@ data class StopRouteEntity(
     @PrimaryKey(autoGenerate = true)
     val key: Int = 0,
     val stopId: Int,
-    val routeKey: String
+    val routeKey: String,
+    val expiryTime: String
 )

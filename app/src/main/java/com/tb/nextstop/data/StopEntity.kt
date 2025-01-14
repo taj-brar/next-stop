@@ -11,4 +11,5 @@ data class StopEntity(
     val stopNumber: Int,
     val lat: Double,
     val lon: Double,
+    val expiryTime: String
 )

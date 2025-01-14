@@ -9,4 +9,5 @@ data class RouteEntity(
     val routeKey: String,
     val number: String,
     val badgeLabel: String,
+    val expiryTime: String
 )

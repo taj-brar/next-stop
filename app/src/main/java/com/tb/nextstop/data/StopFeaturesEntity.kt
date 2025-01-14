@@ -10,5 +10,6 @@ data class StopFeaturesEntity(
     val hasHeatedShelter: Boolean,
     val hasUnHeatedShelter: Boolean,
     val hasBench: Boolean,
-    val hasESign: Boolean
+    val hasESign: Boolean,
+    val expiryTime: String
 )

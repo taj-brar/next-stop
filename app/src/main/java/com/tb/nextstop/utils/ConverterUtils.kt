@@ -16,6 +16,7 @@ fun Stop.toStopEntity(): StopEntity {
         stopNumber = stopNumber,
         lat = centre.geographic.latitude.toDoubleOrNull() ?: 0.0,
         lon = centre.geographic.longitude.toDoubleOrNull() ?: 0.0,
+        expiryTime = getCacheExpiryTime(),
     )
 }
 
@@ -26,6 +27,7 @@ fun List<StopFeature>.toStopFeaturesEntity(stopId: Int): StopFeaturesEntity {
         hasUnHeatedShelter = any { feature -> feature.name == UNHEATED_SHELTER },
         hasBench = any { feature -> feature.name == BENCH },
         hasESign = any { feature -> feature.name == E_SIGN },
+        expiryTime = getCacheExpiryTime(),
     )
 }
 
@@ -54,6 +56,7 @@ fun RouteEntity.toRoute(): Route {
 fun Route.toStopRouteEntity(stopId: Int): StopRouteEntity {
     return StopRouteEntity(
         stopId = stopId,
-        routeKey = tryGetValueFromJsonElement(key).toString()
+        routeKey = tryGetValueFromJsonElement(key).toString(),
+        expiryTime = getCacheExpiryTime(),
     )
 }
