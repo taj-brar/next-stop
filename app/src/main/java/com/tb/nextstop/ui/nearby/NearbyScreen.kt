@@ -1,6 +1,6 @@
 package com.tb.nextstop.ui.nearby
 
-import androidx.compose.foundation.Image
+import MapThumbnailComposable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,9 +28,10 @@ import com.tb.nextstop.R
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.Stop
 import com.tb.nextstop.data.StopFeature
-import com.tb.nextstop.data.dummyStopFeatures
 import com.tb.nextstop.data.dummyRoutes
 import com.tb.nextstop.data.dummyStop
+import com.tb.nextstop.data.dummyStopFeatures
+import com.tb.nextstop.ui.map.WPG_LAT
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
 import com.tb.nextstop.ui.shared.StopFeaturesGrid
@@ -99,8 +98,8 @@ fun StopCard(
     modifier: Modifier = Modifier
 ) {
     val cardColor = MaterialTheme.colorScheme.background
-    OutlinedCard (
-        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)),
+    OutlinedCard(
+        modifier = modifier.padding(0.dp),//dimensionResource(R.dimen.padding_small)),
         onClick = { onStopClicked(stop.stopId) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor,
@@ -111,22 +110,20 @@ fun StopCard(
         )
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(
-                    vertical = dimensionResource(R.dimen.padding_medium),
-                    horizontal = dimensionResource(R.dimen.padding_small),
-                )
+                .padding(0.dp)
                 .background(color = cardColor)
         ) {
-            Image(
-                painter = painterResource(R.drawable.map_black),
-                contentDescription = "stop thumbnail",
+            MapThumbnailComposable(
+                latitude = stop.centre.geographic.latitude.toDoubleOrNull() ?: WPG_LAT,
+                longitude = stop.centre.geographic.longitude.toDoubleOrNull() ?: WPG_LAT,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.padding_medium))
-                    .size(dimensionResource(R.dimen.stop_thumbnail_size))
-                    .background(color = colorResource(R.color.white))
+                    .size(
+                        dimensionResource(R.dimen.stop_thumbnail_width),
+                        dimensionResource(R.dimen.stop_thumbnail_height)
+                    )
             )
             Column(
                 modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))

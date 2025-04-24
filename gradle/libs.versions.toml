@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+maplibreSdk = "11.8.6"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -19,6 +20,7 @@ squareupLoggingInterceptor = "4.10.0"
 playServicesLocation = "21.3.0"
 
 [libraries]
+maplibre-sdk = { module = "org.maplibre.gl:android-sdk", version.ref = "maplibreSdk" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }

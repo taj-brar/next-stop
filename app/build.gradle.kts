@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.play.services.location)
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.ktx)
-
+    implementation(libs.maplibre.sdk)
 
     testImplementation(libs.junit)
 
