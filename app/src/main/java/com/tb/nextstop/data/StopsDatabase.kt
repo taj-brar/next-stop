@@ -25,7 +25,7 @@ abstract class StopsDatabase : RoomDatabase() {
         fun getDatabase(context: Context): StopsDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, StopsDatabase::class.java, "stop_database")
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                     .also { Instance = it }
             }
