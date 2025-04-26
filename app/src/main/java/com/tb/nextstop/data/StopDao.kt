@@ -6,8 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.tb.nextstop.data.entity.RouteEntity
 import com.tb.nextstop.data.entity.NearbyStopEntity
+import com.tb.nextstop.data.entity.RouteEntity
+import com.tb.nextstop.data.entity.SavedStopEntity
 import com.tb.nextstop.data.entity.StopFeaturesEntity
 import com.tb.nextstop.data.entity.StopRouteEntity
 import kotlinx.coroutines.flow.Flow
@@ -67,4 +68,17 @@ interface StopDao {
 
     @Query("SELECT * FROM stopRoutes WHERE stopId = :stopId")
     fun getStopRoutes(stopId: Int) : Flow<List<StopRouteEntity>>
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSavedStop(savedStop: SavedStopEntity)
+
+    @Update
+    suspend fun updateSavedStop(savedStop: SavedStopEntity)
+
+    @Delete
+    suspend fun deleteSavedStop(savedStop: SavedStopEntity)
+
+    @Query("SELECT * FROM savedStops ORDER BY stopId ASC")
+    fun getAllSavedStops(): Flow<List<SavedStopEntity>>
 }

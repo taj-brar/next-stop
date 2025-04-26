@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.tb.nextstop.data.entity.RouteEntity
 import com.tb.nextstop.data.entity.NearbyStopEntity
+import com.tb.nextstop.data.entity.RouteEntity
+import com.tb.nextstop.data.entity.SavedStopEntity
 import com.tb.nextstop.data.entity.StopFeaturesEntity
 import com.tb.nextstop.data.entity.StopRouteEntity
 
@@ -14,9 +15,10 @@ import com.tb.nextstop.data.entity.StopRouteEntity
         NearbyStopEntity::class,
         StopFeaturesEntity::class,
         RouteEntity::class,
-        StopRouteEntity::class
+        StopRouteEntity::class,
+        SavedStopEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class StopsDatabase : RoomDatabase() {

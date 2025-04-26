@@ -5,6 +5,8 @@ import com.tb.nextstop.network.WPTApiV3Service
 import com.tb.nextstop.utils.createRoute
 import com.tb.nextstop.utils.isCacheExpired
 import com.tb.nextstop.utils.toRoute
+import com.tb.nextstop.utils.toSavedStopEntity
+import com.tb.nextstop.utils.toStop
 import com.tb.nextstop.utils.toStopEntity
 import com.tb.nextstop.utils.toStopFeatureList
 import com.tb.nextstop.utils.toStopFeaturesEntity
@@ -17,6 +19,8 @@ interface WPTRepository {
     suspend fun getStopRoutes(stopId: Int): List<Route>
     suspend fun getStopSchedule(stopId: Int): StopSchedule
     suspend fun getLiveTrip(tripId: Int): LiveTripResponse
+    suspend fun insertSavedStop(savedStop: Stop)
+    suspend fun getSavedStops(): List<Stop>
 }
 
 class NetworkWPTRepository(
@@ -65,9 +69,7 @@ class NetworkWPTRepository(
         var needNetworkCall = true
 
         if (!localStopRoutes.isNullOrEmpty()) {
-            if (localStopRoutes.any { localStopRoute ->
-                isCacheExpired(localStopRoute.expiryTime)
-            }) {
+            if (localStopRoutes.any { isCacheExpired(it.expiryTime) }) {
                 localStopRoutes.forEach { localStopRoute ->
                     stopDao.deleteStopRoute(localStopRoute)
                 }
@@ -101,5 +103,20 @@ class NetworkWPTRepository(
 
     override suspend fun getLiveTrip(tripId: Int): LiveTripResponse {
         return wptApiV2Service.getLiveTrip(tripId)
+    }
+
+    override suspend fun insertSavedStop(savedStop: Stop) {
+        stopDao.insertSavedStop(savedStop.toSavedStopEntity())
+    }
+
+    override suspend fun getSavedStops(): List<Stop> {
+        val savedStopEntities = stopDao.getAllSavedStops().firstOrNull()
+        val savedStops = mutableListOf<Stop>()
+
+        savedStopEntities?.forEach { entity ->
+            savedStops.add(entity.toStop())
+        }
+
+        return savedStops
     }
 }

@@ -1,10 +1,13 @@
 package com.tb.nextstop.utils
 
+import com.tb.nextstop.data.Centre
+import com.tb.nextstop.data.GeographicPoint
 import com.tb.nextstop.data.Route
-import com.tb.nextstop.data.entity.RouteEntity
 import com.tb.nextstop.data.Stop
-import com.tb.nextstop.data.entity.NearbyStopEntity
 import com.tb.nextstop.data.StopFeature
+import com.tb.nextstop.data.entity.NearbyStopEntity
+import com.tb.nextstop.data.entity.RouteEntity
+import com.tb.nextstop.data.entity.SavedStopEntity
 import com.tb.nextstop.data.entity.StopFeaturesEntity
 import com.tb.nextstop.data.entity.StopRouteEntity
 import kotlinx.serialization.json.JsonPrimitive
@@ -58,5 +61,24 @@ fun Route.toStopRouteEntity(stopId: Int): StopRouteEntity {
         stopId = stopId,
         routeKey = tryGetValueFromJsonElement(key).toString(),
         expiryTime = getCacheExpiryTime(),
+    )
+}
+
+fun SavedStopEntity.toStop(): Stop {
+    return Stop(
+        stopId = stopId,
+        name = name,
+        stopNumber = stopNumber,
+        centre = Centre(GeographicPoint(lat.toString(), lon.toString()))
+    )
+}
+
+fun Stop.toSavedStopEntity(): SavedStopEntity {
+    return SavedStopEntity(
+        stopId = stopId,
+        name = name,
+        stopNumber = stopNumber,
+        lat = centre.geographic.latitude.toDoubleOrNull() ?: 0.0,
+        lon = centre.geographic.longitude.toDoubleOrNull() ?: 0.0,
     )
 }
