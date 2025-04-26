@@ -98,7 +98,11 @@ fun NextStopApp(
                 MapScreen()
             }
             composable(NextStopApp.Saved.name) {
-                SavedScreen()
+                SavedScreen(
+                    onStopClicked = {
+                        navController.navigate("${StopScheduleDestination.ROUTE}/$it")
+                    }
+                )
             }
             composable(
                 route = StopScheduleDestination.ROUTE_WITH_ARGS,
