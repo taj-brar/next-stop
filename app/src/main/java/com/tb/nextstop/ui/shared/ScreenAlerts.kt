@@ -23,8 +23,8 @@ import com.tb.nextstop.R
 @Preview
 @Composable
 fun ErrorScreen(
+    modifier: Modifier = Modifier,
     @StringRes textRes: Int = R.string.default_error_desc,
-    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

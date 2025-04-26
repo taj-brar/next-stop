@@ -1,12 +1,14 @@
 package com.tb.nextstop.ui.shared
 
 import MapThumbnailComposable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,26 +44,31 @@ fun StopsList(
     featuresMap: MutableMap<Int, List<StopFeature>>,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(
-                start = dimensionResource(R.dimen.padding_small),
-                top = dimensionResource(R.dimen.padding_xxlarge),
-                end = dimensionResource(R.dimen.padding_small),
-                bottom = dimensionResource(R.dimen.padding_small),
-            )
-    ) {
-        items(count = stops.size) { index ->
-            val stop = stops[index]
+    if (stops.isNotEmpty()) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxHeight()
+                .padding(
+                    start = dimensionResource(R.dimen.padding_small),
+                    top = dimensionResource(R.dimen.padding_xxlarge),
+                    end = dimensionResource(R.dimen.padding_small),
+                    bottom = dimensionResource(R.dimen.padding_small),
+                )
+        ) {
+            items(count = stops.size) { index ->
+                val stop = stops[index]
 
-            StopCard(
-                onStopClicked = onStopClicked,
-                stop = stop,
-                routes = routesMap[stop.stopId] ?: listOf(),
-                features = featuresMap[stop.stopId] ?: listOf(),
-            )
+                StopCard(
+                    onStopClicked = onStopClicked,
+                    stop = stop,
+                    routes = routesMap[stop.stopId] ?: listOf(),
+                    features = featuresMap[stop.stopId] ?: listOf(),
+                )
+            }
         }
+    }
+    else {
+        EmptyScreen()
     }
 }
 
@@ -144,6 +153,30 @@ fun StopPreview() {
             dummyStop,
             dummyRoutes,
             dummyStopFeatures
+        )
+    }
+}
+
+@Preview
+@Composable
+fun EmptyScreen(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primaryContainer),
+    ) {
+        Image(
+            painter = painterResource(R.drawable.magnifying_glass),
+            contentDescription = stringResource(R.string.no_stops_found),
+            modifier = Modifier.size(dimensionResource(R.dimen.screen_alert_icon_size))
+        )
+        Text(
+            text = stringResource(R.string.no_stops_found),
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }
