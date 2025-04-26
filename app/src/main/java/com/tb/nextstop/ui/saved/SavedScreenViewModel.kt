@@ -45,10 +45,9 @@ class SavedScreenViewModel(
             savedStopsUIState = SavedStopsUIState.Loading
             try {
                 val stops = wptRepository.getSavedStops()
-                savedStopsUIState = SavedStopsUIState.Success(stops, mutableMapOf(), mutableMapOf())
-//                val stopsAndRoutes = getSavedStopsAndRoutes(stops)
-//                val stopsAndFeatures = getSavedStopsAndFeatures(stops)
-//                savedStopsUIState = SavedStopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
+                val stopsAndRoutes = getSavedStopsAndRoutes(stops)
+                val stopsAndFeatures = getSavedStopsAndFeatures(stops)
+                savedStopsUIState = SavedStopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stops\n$e")
                 savedStopsUIState = SavedStopsUIState.Error

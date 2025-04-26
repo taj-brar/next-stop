@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tb.nextstop.R
 import com.tb.nextstop.ui.shared.ErrorScreen
 import com.tb.nextstop.ui.shared.LoadingScreen
+import com.tb.nextstop.ui.shared.StopModalOption
 import com.tb.nextstop.ui.shared.StopsList
 
 
@@ -20,7 +22,14 @@ fun NearbyScreen(
             stops = stopsUIState.stops,
             routesMap = stopsUIState.routesMap,
             featuresMap = stopsUIState.featuresMap,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            stopModalOptions = listOf(
+                StopModalOption(
+                    iconId = R.drawable.saved_black,
+                    text = "Save stop",
+                    onClick = { nearbyScreenViewModel.saveNearbyStop(it) }
+                )
+            )
         )
 
         is StopsUIState.Error -> ErrorScreen()

@@ -103,6 +103,20 @@ class NearbyScreenViewModel(
         return featuresMap
     }
 
+    fun saveNearbyStop(stopId: Int) {
+        viewModelScope.launch {
+            if (stopsUIState is StopsUIState.Success) {
+                val stopToSave = (stopsUIState as StopsUIState.Success).stops.find { stop ->
+                    stop.stopId == stopId
+                }
+
+                if (stopToSave != null) {
+                    wptRepository.insertSavedStop(stopToSave)
+                }
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         location.removeObserver { }
