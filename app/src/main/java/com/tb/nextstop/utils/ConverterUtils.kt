@@ -3,14 +3,14 @@ package com.tb.nextstop.utils
 import com.tb.nextstop.data.Route
 import com.tb.nextstop.data.entity.RouteEntity
 import com.tb.nextstop.data.Stop
-import com.tb.nextstop.data.entity.StopEntity
+import com.tb.nextstop.data.entity.NearbyStopEntity
 import com.tb.nextstop.data.StopFeature
 import com.tb.nextstop.data.entity.StopFeaturesEntity
 import com.tb.nextstop.data.entity.StopRouteEntity
 import kotlinx.serialization.json.JsonPrimitive
 
-fun Stop.toStopEntity(): StopEntity {
-    return StopEntity(
+fun Stop.toStopEntity(): NearbyStopEntity {
+    return NearbyStopEntity(
         stopId = stopId,
         name = name,
         stopNumber = stopNumber,

@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.tb.nextstop.data.entity.RouteEntity
-import com.tb.nextstop.data.entity.StopEntity
+import com.tb.nextstop.data.entity.NearbyStopEntity
 import com.tb.nextstop.data.entity.StopFeaturesEntity
 import com.tb.nextstop.data.entity.StopRouteEntity
 import kotlinx.coroutines.flow.Flow
@@ -15,19 +15,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface StopDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertStop(stop: StopEntity)
+    suspend fun insertStop(stop: NearbyStopEntity)
 
     @Update
-    suspend fun updateStop(stop: StopEntity)
+    suspend fun updateStop(stop: NearbyStopEntity)
 
     @Delete
-    suspend fun deleteStop(stop: StopEntity)
+    suspend fun deleteStop(stop: NearbyStopEntity)
 
-    @Query("SELECT * FROM stops WHERE stopID = :stopId")
-    fun getStop(stopId: Int): Flow<StopEntity>
+    @Query("SELECT * FROM nearbyStops WHERE stopID = :stopId")
+    fun getStop(stopId: Int): Flow<NearbyStopEntity>
 
-    @Query("SELECT * FROM stops ORDER BY stopId ASC")
-    fun getAllStops(): Flow<List<StopEntity>>
+    @Query("SELECT * FROM nearbyStops ORDER BY stopId ASC")
+    fun getAllStops(): Flow<List<NearbyStopEntity>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

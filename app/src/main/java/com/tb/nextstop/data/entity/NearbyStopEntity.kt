@@ -3,8 +3,8 @@ package com.tb.nextstop.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "stops")
-data class StopEntity(
+@Entity(tableName = "nearbyStops")
+data class NearbyStopEntity(
     @PrimaryKey
     val stopId: Int,
     val name: String,
