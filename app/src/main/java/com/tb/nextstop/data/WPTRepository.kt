@@ -21,6 +21,7 @@ interface WPTRepository {
     suspend fun getLiveTrip(tripId: Int): LiveTripResponse
     suspend fun insertSavedStop(savedStop: Stop)
     suspend fun getSavedStops(): List<Stop>
+    suspend fun removeSavedStop(stopId: Int)
 }
 
 class NetworkWPTRepository(
@@ -119,4 +120,13 @@ class NetworkWPTRepository(
 
         return savedStops
     }
+
+    override suspend fun removeSavedStop(stopId: Int) {
+        val stopToRemove = stopDao.getSavedStop(stopId).firstOrNull()
+
+        if (stopToRemove != null) {
+            stopDao.deleteSavedStop(stopToRemove)
+        }
+    }
+
 }

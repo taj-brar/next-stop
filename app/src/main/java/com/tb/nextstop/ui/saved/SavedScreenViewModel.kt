@@ -21,7 +21,7 @@ import java.io.IOException
 
 sealed interface SavedStopsUIState {
     data class Success(
-        val stops: List<Stop>,
+        val stops: MutableList<Stop>,
         val routesMap: MutableMap<Int, List<Route>>,
         val featuresMap: MutableMap<Int, List<StopFeature>>,
     ) : SavedStopsUIState
@@ -47,7 +47,11 @@ class SavedScreenViewModel(
                 val stops = wptRepository.getSavedStops()
                 val stopsAndRoutes = getSavedStopsAndRoutes(stops)
                 val stopsAndFeatures = getSavedStopsAndFeatures(stops)
-                savedStopsUIState = SavedStopsUIState.Success(stops, stopsAndRoutes, stopsAndFeatures)
+                savedStopsUIState = SavedStopsUIState.Success(
+                    stops.toMutableList(),
+                    stopsAndRoutes,
+                    stopsAndFeatures
+                )
             } catch (e: HttpException) {
                 Log.d("VM", "Error getting stops\n$e")
                 savedStopsUIState = SavedStopsUIState.Error
@@ -88,6 +92,15 @@ class SavedScreenViewModel(
             featuresMap[stop.stopId] = stopFeatures
         }
         return featuresMap
+    }
+
+    fun removeSavedStop(stopId: Int) {
+        viewModelScope.launch {
+            if (savedStopsUIState is SavedStopsUIState.Success) {
+                wptRepository.removeSavedStop(stopId)
+                getSavedStops()
+            }
+        }
     }
 
     companion object {

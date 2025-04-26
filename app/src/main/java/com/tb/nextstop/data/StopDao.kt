@@ -25,10 +25,10 @@ interface StopDao {
     suspend fun deleteStop(stop: NearbyStopEntity)
 
     @Query("SELECT * FROM nearbyStops WHERE stopID = :stopId")
-    fun getStop(stopId: Int): Flow<NearbyStopEntity>
+    fun getNearbyStop(stopId: Int): Flow<NearbyStopEntity>
 
     @Query("SELECT * FROM nearbyStops ORDER BY stopId ASC")
-    fun getAllStops(): Flow<List<NearbyStopEntity>>
+    fun getAllNearbyStops(): Flow<List<NearbyStopEntity>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -78,6 +78,9 @@ interface StopDao {
 
     @Delete
     suspend fun deleteSavedStop(savedStop: SavedStopEntity)
+
+    @Query("SELECT * FROM savedStops WHERE stopID = :stopId")
+    fun getSavedStop(stopId: Int): Flow<SavedStopEntity>
 
     @Query("SELECT * FROM savedStops ORDER BY stopId ASC")
     fun getAllSavedStops(): Flow<List<SavedStopEntity>>

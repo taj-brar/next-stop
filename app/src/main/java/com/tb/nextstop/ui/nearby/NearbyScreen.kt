@@ -26,7 +26,7 @@ fun NearbyScreen(
             stopModalOptions = listOf(
                 StopModalOption(
                     iconId = R.drawable.saved_black,
-                    text = "Save stop",
+                    text = "Add stop to saved",
                     onClick = { nearbyScreenViewModel.saveNearbyStop(it) }
                 )
             )

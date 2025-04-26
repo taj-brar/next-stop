@@ -218,16 +218,17 @@ fun StopModalBottomSheetOption(
                 .background(BottomSheetDefaults.ContainerColor)
                 .padding(dimensionResource(R.dimen.padding_medium)),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Start
         ) {
             Icon(
                 painter = painterResource(option.iconId),
                 contentDescription = option.text,
-                modifier = Modifier.scale(2.0F)
+                modifier = Modifier.scale(1.5F)
             )
             Text(
                 text = option.text,
-                fontSize = 17.sp
+                fontSize = 17.sp,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
             )
         }
     }
