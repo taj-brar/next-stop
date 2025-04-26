@@ -1,4 +1,4 @@
-package com.tb.nextstop.data
+package com.tb.nextstop.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

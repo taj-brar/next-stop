@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.tb.nextstop.data.entity.RouteEntity
+import com.tb.nextstop.data.entity.StopEntity
+import com.tb.nextstop.data.entity.StopFeaturesEntity
+import com.tb.nextstop.data.entity.StopRouteEntity
 
 @Database(
     entities = [

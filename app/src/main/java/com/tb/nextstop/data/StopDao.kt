@@ -6,6 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.tb.nextstop.data.entity.RouteEntity
+import com.tb.nextstop.data.entity.StopEntity
+import com.tb.nextstop.data.entity.StopFeaturesEntity
+import com.tb.nextstop.data.entity.StopRouteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
