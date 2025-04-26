@@ -2,12 +2,10 @@ package com.tb.nextstop.ui.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.tb.nextstop.R
 import com.tb.nextstop.data.Stop
-import com.tb.nextstop.utils.checkAndRequestLocationPermission
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
@@ -26,10 +24,7 @@ private const val E_LON_LIMIT = -96.9
 fun OpenStreetMapComposable(
     stops: List<Stop>
 ) {
-    val localContext = LocalContext.current
-
     DisposableEffect(Unit) {
-        checkAndRequestLocationPermission(localContext)
         onDispose { }
     }
 

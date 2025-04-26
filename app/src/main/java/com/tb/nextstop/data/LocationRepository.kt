@@ -1,12 +1,14 @@
 package com.tb.nextstop.data
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.tb.nextstop.utils.checkAndRequestLocationPermission
+import com.tb.nextstop.utils.locationPermissions
 
 interface LocationRepository {
     val location: LiveData<Location?>
@@ -23,13 +25,20 @@ class LocalLocationRepository(
     override val location: LiveData<Location?> get() = _location
 
     override suspend fun updateLocation() {
-        checkAndRequestLocationPermission(context)
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                _location.postValue(location)
+        if (locationPermissions.any { perm ->
+                ContextCompat.checkSelfPermission(
+                    context,
+                    perm
+                ) == PackageManager.PERMISSION_GRANTED
             }
-            .addOnFailureListener {
-                _location.postValue(null)
-            }
+        ) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    _location.postValue(location)
+                }
+                .addOnFailureListener {
+                    _location.postValue(null)
+                }
+        }
     }
 }
