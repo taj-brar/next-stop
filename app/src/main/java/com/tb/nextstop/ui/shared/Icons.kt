@@ -86,7 +86,7 @@ fun StopRoutesGrid(
     val routeIconSize = dimensionResource(R.dimen.route_icon_size)
     val gridHeight = routeIconSize * numRows
     val gridWidth = routeIconSize * numColumns
-    val routes = routesList.map { route ->
+    val routes = routesList.distinctBy { it.key }.map { route ->
         route.badgeLabel
     }
     LazyHorizontalGrid(
