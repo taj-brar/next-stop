@@ -1,6 +1,5 @@
 package com.tb.nextstop.ui.shared
 
-import MapThumbnailComposable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable

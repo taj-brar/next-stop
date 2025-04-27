@@ -1,3 +1,5 @@
+package com.tb.nextstop.ui.shared
+
 import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
