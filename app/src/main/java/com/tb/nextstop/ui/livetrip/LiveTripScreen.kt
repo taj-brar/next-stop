@@ -48,8 +48,8 @@ import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
 fun LiveTripScreen(
+    modifier: Modifier = Modifier,
     liveTripViewModel: LiveTripViewModel = viewModel(factory = LiveTripViewModel.Factory),
-    modifier: Modifier = Modifier
 ) {
     LaunchedEffect(Unit) {
         while (true) {
@@ -113,7 +113,7 @@ fun LiveTripHeader(
             modifier = Modifier.weight(4f),
             verticalAlignment = Alignment.Top
         ) {
-            BusRouteIcon(JsonPrimitive(route.badgeLabel))
+            BusRouteIcon(route = JsonPrimitive(route.badgeLabel))
             Text(
                 text = route.label,
                 modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))

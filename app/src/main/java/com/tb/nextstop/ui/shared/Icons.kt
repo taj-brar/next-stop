@@ -44,8 +44,8 @@ import kotlin.math.min
 @Preview
 @Composable
 fun BusRouteIcon(
-    route: JsonElement = JsonPrimitive("BLUE"),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    route: JsonElement = JsonPrimitive("BLUE")
 ) {
     val defaultFontSize = 13.sp
     val iconSize = dimensionResource(R.dimen.route_icon_size)

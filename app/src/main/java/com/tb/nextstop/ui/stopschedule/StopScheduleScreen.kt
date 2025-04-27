@@ -49,9 +49,9 @@ import com.tb.nextstop.utils.getHrsMinsFromWPTFormat
 
 @Composable
 fun StopScheduleScreen(
+    modifier: Modifier = Modifier,
     onScheduledStopClicked: (Int) -> Unit,
     stopScheduleViewModel: StopScheduleViewModel = viewModel(factory = StopScheduleViewModel.Factory),
-    modifier: Modifier = Modifier
 ) {
     when (val stopScheduleUIState = stopScheduleViewModel.stopScheduleUIState) {
         is StopScheduleUIState.Success -> StopScheduleSuccessScreen(
@@ -286,8 +286,8 @@ fun ScheduledStopCard(
                 modifier = Modifier.weight(2f)
             ) {
                 BusRouteIcon(
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
                     route = route.number,
-                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
                 Text(
                     text = scheduledStop.variant.name,
