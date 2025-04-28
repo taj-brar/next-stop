@@ -16,6 +16,7 @@ import com.tb.nextstop.R
 
 @Composable
 fun MapThumbnailComposable(
+    stopId: Int,
     latitude: Double,
     longitude: Double,
     modifier: Modifier = Modifier,
@@ -25,7 +26,7 @@ fun MapThumbnailComposable(
     )
 ) {
     LaunchedEffect(latitude, longitude) {
-        mapThumbnailViewModel.getSnapshotFromMap(latitude, longitude)
+        mapThumbnailViewModel.getSnapshotFromMap(stopId, latitude, longitude)
     }
 
     Box(

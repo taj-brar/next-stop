@@ -16,10 +16,6 @@ import com.tb.nextstop.NextStopApplication
 import com.tb.nextstop.data.LocationRepository
 import kotlinx.coroutines.launch
 
-private const val DEFAULT_ZOOM = 18.0
-private const val WIDTH = 500
-private const val HEIGHT = 500
-
 sealed interface MapThumbnailUIState {
     data class Success(
         val snapshot: Bitmap
@@ -39,15 +35,13 @@ class MapThumbnailViewModel(
         mapThumbnailUIState = MapThumbnailUIState.Loading
     }
 
-    fun getSnapshotFromMap(latitude: Double, longitude: Double) {
+    fun getSnapshotFromMap(stopId: Int, latitude: Double, longitude: Double) {
         viewModelScope.launch {
             Handler(Looper.getMainLooper()).post {
-                locationRepository.getMapSnapshot(
+                locationRepository.getSnapshot(
+                    id = stopId,
                     latitude = latitude,
                     longitude = longitude,
-                    width = WIDTH,
-                    height = HEIGHT,
-                    zoom = DEFAULT_ZOOM
                 ) { bitmap ->
                     mapThumbnailUIState = MapThumbnailUIState.Success(bitmap)
                 }

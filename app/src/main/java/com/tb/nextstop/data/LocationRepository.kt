@@ -3,6 +3,7 @@ package com.tb.nextstop.data
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -15,17 +16,22 @@ import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.Style
 import org.maplibre.android.snapshotter.MapSnapshotter
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
+private const val DEFAULT_ZOOM = 18.0
+private const val WIDTH = 500
+private const val HEIGHT = 500
 
 interface LocationRepository {
     val location: LiveData<Location?>
     suspend fun updateLocation()
-    fun getMapSnapshot(
+    fun getSnapshot(
+        id: Int,
         latitude: Double,
         longitude: Double,
-        width: Int,
-        height: Int,
-        zoom: Double,
-        afterLoading: (Bitmap) -> Unit,
+        afterGetting: (Bitmap) -> Unit
     )
 }
 
@@ -56,20 +62,44 @@ class LocalLocationRepository(
         }
     }
 
-    override fun getMapSnapshot(
+    override fun getSnapshot(
+        id: Int,
         latitude: Double,
         longitude: Double,
-        width: Int,
-        height: Int,
-        zoom: Double,
-        afterLoading: (Bitmap) -> Unit,
+        afterGetting: (Bitmap) -> Unit
+    ) {
+        try {
+            val file = File(context.filesDir, "$id.png")
+
+            if (file.exists()) {
+                val snapshot = BitmapFactory.decodeFile(file.absolutePath)
+                afterGetting(snapshot)
+            } else {
+                createSnapshot(
+                    latitude = latitude,
+                    longitude = longitude,
+                    afterCreating = { bitmap ->
+                        saveSnapshot(id, bitmap)
+                        afterGetting(bitmap)
+                    }
+                )
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun createSnapshot(
+        latitude: Double,
+        longitude: Double,
+        afterCreating: (Bitmap) -> Unit,
     ) {
         val styleJson = context.resources.openRawResource(R.raw.demotiles).reader().readText()
-        val options = MapSnapshotter.Options(width, height)
+        val options = MapSnapshotter.Options(WIDTH, HEIGHT)
             .withCameraPosition(
                 CameraPosition.Builder()
                     .target(LatLng(latitude, longitude))
-                    .zoom(zoom)
+                    .zoom(DEFAULT_ZOOM)
                     .build()
             )
             .withStyleBuilder(Style.Builder().fromJson(styleJson))
@@ -78,7 +108,20 @@ class LocalLocationRepository(
         val snapshotter = MapSnapshotter(context, options)
         snapshotter.start({ result ->
             val snapshot = result.bitmap
-            afterLoading(snapshot)
+            afterCreating(snapshot)
         })
+    }
+
+    private fun saveSnapshot(id: Int, snapshot: Bitmap) {
+        try {
+            val outputStream: FileOutputStream = context.openFileOutput(
+                "$id.png",
+                Context.MODE_PRIVATE
+            )
+            snapshot.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }

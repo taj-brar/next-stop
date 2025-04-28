@@ -129,6 +129,7 @@ fun StopCard(
                 .background(color = cardColor)
         ) {
             MapThumbnailComposable(
+                stopId = stop.stopId,
                 latitude = stop.centre.geographic.latitude.toDoubleOrNull() ?: WPG_LAT,
                 longitude = stop.centre.geographic.longitude.toDoubleOrNull() ?: WPG_LAT,
                 modifier = Modifier
